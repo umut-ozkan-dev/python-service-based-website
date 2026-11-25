@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-void: #040507;
+  --bg-surface: #0a0c10;
+  --bg-elevated: #10131a;
+  --bg-hover: #161b24;
+  --border-hairline: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-cyan: #38bdf8;
+  --accent-emerald: #34d399;
+  --accent-amber: #f59e0b;
+  --accent-rose: #fb7185;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+  background-color: var(--bg-void);
+  color: var(--text-primary);
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--bg-void);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+.hero-ambient {
+  background: radial-gradient(60% 45% at 50% 48%, rgba(56, 189, 248, 0.09) 0%, rgba(14, 165, 233, 0.03) 38%, rgba(4, 5, 7, 0) 75%);
+}
+
+@keyframes slow-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-slow-orbit {
+  animation: slow-orbit 48s linear infinite;
+}
+
+.motion-paused,
+.motion-paused * {
+  animation-play-state: paused !important;
+}
+
+input[type="range"].relay-slider {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+}
+
+input[type="range"].relay-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 2px solid #38bdf8;
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.14);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+input[type="range"].relay-slider::-moz-range-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 2px solid #38bdf8;
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.14);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+input[type="range"].relay-slider::-webkit-slider-thumb:hover,
+input[type="range"].relay-slider:focus-visible::-webkit-slider-thumb,
+input[type="range"].relay-slider::-moz-range-thumb:hover,
+input[type="range"].relay-slider:focus-visible::-moz-range-thumb {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 6px rgba(56, 189, 248, 0.24);
+}
