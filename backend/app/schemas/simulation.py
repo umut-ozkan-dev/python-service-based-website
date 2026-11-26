@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, field_validator
 
@@ -32,6 +32,8 @@ class SimulationStep(BaseModel):
     actor: Literal["prospect", "relay60_ai", "crm_system", "calendar_system"]
     actor_badge: str
     message_body: str
+    requires_approval: bool = False
+    approval_action_label: str | None = None
 
 
 class CrmPreviewPayload(BaseModel):
@@ -39,9 +41,9 @@ class CrmPreviewPayload(BaseModel):
     contact_handle: str
     vertical_tag: str
     source_channel: EnquiryChannel
-    qualification_status: Literal["Qualified — High Intent"]
+    qualification_status: str
     estimated_value_display: str
-    pipeline_stage: Literal["Appointment Booked"]
+    pipeline_stage: str
     response_sla_seconds: int
 
 
@@ -63,3 +65,4 @@ class SimulationResponse(BaseModel):
     crm_preview: CrmPreviewPayload
     appointment_preview: BookedAppointmentPreview
     compliance_footer: str
+    webhook_json_preview: dict[str, Any]

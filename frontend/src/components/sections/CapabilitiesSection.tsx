@@ -3,7 +3,7 @@ import { Bot, Calendar, Database, RefreshCw, ShieldCheck, Zap } from "lucide-rea
 import { CAPABILITIES_COPY } from "@/lib/copy";
 import { TOKEN } from "@/lib/tokens";
 
-const ICONS = [Zap, Bot, Database, Calendar, RefreshCw, ShieldCheck];
+const ICONS = [Zap, Calendar, Database, RefreshCw, Bot, ShieldCheck];
 
 export function CapabilitiesSection() {
   return (

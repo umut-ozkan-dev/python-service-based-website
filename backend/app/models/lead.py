@@ -7,6 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
 from app.models.enums import (
+    AutomationFocus,
     DispatchChannel,
     DispatchStatus,
     IndustryVertical,
@@ -14,6 +15,7 @@ from app.models.enums import (
     MonthlyLeadVolume,
     PreferredTimeWindow,
     RegionCode,
+    TeamSize,
 )
 
 
@@ -27,17 +29,30 @@ class Lead(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     full_name: Mapped[str] = mapped_column(String(120), nullable=False)
     work_email: Mapped[str] = mapped_column(String(254), nullable=False, index=True)
-    phone: Mapped[str] = mapped_column(String(32), nullable=False)
+    phone: Mapped[str | None] = mapped_column(String(32), nullable=True, default=None)
     business_name: Mapped[str] = mapped_column(String(160), nullable=False)
     website_url: Mapped[str | None] = mapped_column(String(255), nullable=True, default=None)
     vertical: Mapped[IndustryVertical] = mapped_column(
-        SAEnum(IndustryVertical, native_enum=False, length=32), nullable=False, index=True
+        SAEnum(IndustryVertical, native_enum=False, length=32),
+        nullable=False,
+        index=True,
+        default=IndustryVertical.LEAD_OPS,
     )
     region: Mapped[RegionCode] = mapped_column(
         SAEnum(RegionCode, native_enum=False, length=8), nullable=False, index=True
     )
-    monthly_lead_volume: Mapped[MonthlyLeadVolume] = mapped_column(
-        SAEnum(MonthlyLeadVolume, native_enum=False, length=32), nullable=False
+    team_size: Mapped[TeamSize] = mapped_column(
+        SAEnum(TeamSize, native_enum=False, length=32),
+        nullable=False,
+        default=TeamSize.GROWING,
+    )
+    automation_focus: Mapped[AutomationFocus] = mapped_column(
+        SAEnum(AutomationFocus, native_enum=False, length=32),
+        nullable=False,
+        default=AutomationFocus.INBOUND_LEADS,
+    )
+    monthly_lead_volume: Mapped[MonthlyLeadVolume | None] = mapped_column(
+        SAEnum(MonthlyLeadVolume, native_enum=False, length=32), nullable=True, default=None
     )
     current_tools: Mapped[str | None] = mapped_column(String(200), nullable=True, default=None)
     preferred_time_window: Mapped[PreferredTimeWindow] = mapped_column(

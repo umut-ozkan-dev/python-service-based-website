@@ -1,7 +1,14 @@
 export type RegionCode = "US" | "UK";
-export type IndustryVertical = "dental" | "medspa" | "trades" | "clinics_legal";
+export type IndustryVertical = "lead_ops" | "client_admin" | "dispatch_quotes" | "internal_ops";
 export type EnquiryChannel = "sms" | "web_form" | "email";
 export type MonthlyLeadVolume = "under_30" | "30_to_75" | "76_to_200" | "200_plus";
+export type TeamSize = "1_to_10" | "11_to_50" | "51_to_200" | "200_plus";
+export type AutomationFocus =
+  | "inbound_leads"
+  | "client_onboarding"
+  | "crm_data_sync"
+  | "internal_assistant"
+  | "custom_workflow";
 export type PreferredTimeWindow = "morning" | "afternoon" | "evening" | "first_available";
 export type LeadResponseStatus =
   | "received"
@@ -17,12 +24,11 @@ export type DispatchStatus = "sent" | "skipped" | "failed";
 export interface LeadCreateRequest {
   full_name: string;
   work_email: string;
-  phone: string;
   business_name: string;
-  website_url: string | null;
-  vertical: IndustryVertical;
+  phone: string | null;
   region: RegionCode;
-  monthly_lead_volume: MonthlyLeadVolume;
+  team_size: TeamSize;
+  automation_focus: AutomationFocus;
   current_tools: string | null;
   preferred_time_window: PreferredTimeWindow;
   notes: string | null;
@@ -60,6 +66,8 @@ export interface SimulationStep {
   actor: "prospect" | "relay60_ai" | "crm_system" | "calendar_system";
   actor_badge: string;
   message_body: string;
+  requires_approval: boolean;
+  approval_action_label: string | null;
 }
 
 export interface CrmPreviewPayload {
@@ -67,9 +75,9 @@ export interface CrmPreviewPayload {
   contact_handle: string;
   vertical_tag: string;
   source_channel: EnquiryChannel;
-  qualification_status: "Qualified — High Intent";
+  qualification_status: string;
   estimated_value_display: string;
-  pipeline_stage: "Appointment Booked";
+  pipeline_stage: string;
   response_sla_seconds: number;
 }
 
@@ -91,6 +99,60 @@ export interface SimulationResponse {
   crm_preview: CrmPreviewPayload;
   appointment_preview: BookedAppointmentPreview;
   compliance_footer: string;
+  webhook_json_preview: Record<string, unknown>;
+}
+
+export interface DispatchLog {
+  id: string;
+  channel: DispatchChannel;
+  adapter_used: string;
+  status: DispatchStatus;
+  latency_ms: number;
+  payload_preview: string;
+  error_detail: string | null;
+  created_at: string;
+}
+
+export interface LeadSummary {
+  id: string;
+  full_name: string;
+  work_email: string;
+  phone: string | null;
+  business_name: string;
+  vertical: IndustryVertical;
+  team_size: TeamSize;
+  automation_focus: AutomationFocus;
+  region: RegionCode;
+  sms_consent: boolean;
+  response_status: LeadResponseStatus;
+  created_at: string;
+}
+
+export interface SimulationSummary {
+  id: string;
+  vertical: IndustryVertical;
+  channel: string;
+  region: RegionCode;
+  is_custom_enquiry: boolean;
+  sample_enquiry: string;
+  created_at: string;
+}
+
+export interface LeadListResponse {
+  total: number;
+  limit: number;
+  offset: number;
+  items: LeadSummary[];
+  recent_simulations: SimulationSummary[];
+}
+
+export interface LeadDetail extends LeadSummary {
+  current_tools: string | null;
+  preferred_time_window: PreferredTimeWindow;
+  notes: string | null;
+  admin_notes: string | null;
+  updated_at: string;
+  dispatch_logs: DispatchLog[];
 }
 
 export interface RoiInputs {

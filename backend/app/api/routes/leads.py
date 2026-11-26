@@ -15,11 +15,8 @@ from app.services.lead_pipeline import execute_lead_dispatch_pipeline
 
 router = APIRouter(prefix="/leads", tags=["leads"])
 
-CONFIRMATION_HEADLINE = "Pipeline Triggered in Real Time — Your Enquiry Is Locked In."
-CONFIRMATION_MESSAGE = (
-    "We just recorded your enquiry, queued your instant email confirmation, "
-    "synced our internal CRM, and alerted an onboarding engineer."
-)
+CONFIRMATION_HEADLINE = "Enquiry received."
+CONFIRMATION_MESSAGE = "Your details are logged and a confirmation email is on the way."
 
 
 @router.post("", response_model=LeadCreateResponse, status_code=status.HTTP_201_CREATED)
@@ -41,6 +38,8 @@ async def create_lead(
         website_url=payload.website_url,
         vertical=payload.vertical,
         region=payload.region,
+        team_size=payload.team_size,
+        automation_focus=payload.automation_focus,
         monthly_lead_volume=payload.monthly_lead_volume,
         current_tools=payload.current_tools,
         preferred_time_window=payload.preferred_time_window,
@@ -67,7 +66,7 @@ async def create_lead(
         lead_id=lead.id,
         response_status=LeadResponseStatus.RECEIVED,
         sla_target_seconds=60,
-        sms_ack_queued=payload.sms_consent is True,
+        sms_ack_queued=payload.sms_consent is True and payload.phone is not None,
         email_ack_queued=True,
         preferred_time_window=lead.preferred_time_window,
         submitted_at=now,

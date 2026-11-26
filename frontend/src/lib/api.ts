@@ -2,14 +2,16 @@ import type {
   ApiErrorPayload,
   LeadCreateRequest,
   LeadCreateResponse,
+  LeadDetail,
+  LeadListResponse,
+  LeadResponseStatus,
   SimulationRequest,
   SimulationResponse,
 } from "@/lib/types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
-const NETWORK_MESSAGE =
-  "Unable to reach the Relay60 server. Please check your connection and try again.";
+const NETWORK_MESSAGE = "Unable to reach the server. Please check your connection and try again.";
 
 export class ApiClientError extends Error {
   status: number;
@@ -73,4 +75,50 @@ export function runSimulationApi(
 
 export function createLeadApi(payload: LeadCreateRequest): Promise<LeadCreateResponse> {
   return postJson<LeadCreateResponse>("/api/v1/leads", payload);
+}
+
+async function adminJson<T>(path: string, apiKey: string, init: RequestInit = {}): Promise<T> {
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE}${path}`, {
+      ...init,
+      headers: {
+        "Content-Type": "application/json",
+        "X-Admin-API-Key": apiKey,
+        ...(init.headers || {}),
+      },
+    });
+  } catch {
+    throw new ApiClientError(0, "NETWORK_ERROR", NETWORK_MESSAGE, null);
+  }
+  if (!response.ok) {
+    let message = response.status === 401 ? "That admin key was not accepted." : "The request failed.";
+    try {
+      const body = (await response.json()) as ApiErrorPayload;
+      message = body.error?.message || message;
+    } catch {
+      message = NETWORK_MESSAGE;
+    }
+    throw new ApiClientError(response.status, `HTTP_${response.status}`, message, null);
+  }
+  return (await response.json()) as T;
+}
+
+export function fetchAdminLeadsApi(apiKey: string, query = ""): Promise<LeadListResponse> {
+  return adminJson<LeadListResponse>(`/api/v1/admin/leads${query}`, apiKey);
+}
+
+export function fetchAdminLeadDetailApi(apiKey: string, leadId: string): Promise<LeadDetail> {
+  return adminJson<LeadDetail>(`/api/v1/admin/leads/${leadId}`, apiKey);
+}
+
+export function patchAdminLeadApi(
+  apiKey: string,
+  leadId: string,
+  payload: { response_status?: LeadResponseStatus; admin_notes?: string },
+): Promise<LeadDetail> {
+  return adminJson<LeadDetail>(`/api/v1/admin/leads/${leadId}`, apiKey, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
 }

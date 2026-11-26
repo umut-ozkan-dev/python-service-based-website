@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     app_env: Literal["development", "test", "production"] = "development"
-    app_name: str = "Relay60 API"
+    app_name: str = "Relay Systems API"
     app_version: str = "1.0.0"
     database_url: str = "sqlite+aiosqlite:///./relay60.db"
     auto_create_schema: bool = True

@@ -10,6 +10,10 @@ export interface RegionMetadata {
   coreMonthlyFee: number;
   proSetupFee: number;
   proMonthlyFee: number;
+  auditFee: number;
+  buildFee: number;
+  monitorMonthly: number;
+  partnerMonthly: number;
   displayPhone: string;
   phonePlaceholder: string;
   defaultAvgTicket: number;
@@ -28,8 +32,12 @@ export const REGION_CONFIG: Record<RegionCode, RegionMetadata> = {
     coreMonthlyFee: 497,
     proSetupFee: 1795,
     proMonthlyFee: 897,
-    displayPhone: "+1 (512) 555-0194",
-    phonePlaceholder: "+1 (555) 234-5678",
+    auditFee: 1500,
+    buildFee: 4500,
+    monitorMonthly: 950,
+    partnerMonthly: 3500,
+    displayPhone: "",
+    phonePlaceholder: "+1 (512) 234-5678",
     defaultAvgTicket: 850,
     complianceBadge: "US Carrier-Compliant (TCPA & A2P 10DLC Ready)",
     postalTerm: "ZIP code",
@@ -44,7 +52,11 @@ export const REGION_CONFIG: Record<RegionCode, RegionMetadata> = {
     coreMonthlyFee: 397,
     proSetupFee: 1450,
     proMonthlyFee: 697,
-    displayPhone: "+44 7700 900412",
+    auditFee: 1200,
+    buildFee: 3500,
+    monitorMonthly: 750,
+    partnerMonthly: 2800,
+    displayPhone: "",
     phonePlaceholder: "+44 7700 900123",
     defaultAvgTicket: 650,
     complianceBadge: "",

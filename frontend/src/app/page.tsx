@@ -6,7 +6,6 @@ import { HeroSection } from "@/components/sections/HeroSection";
 import { LeadBookingSection } from "@/components/sections/LeadBookingSection";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { ProcessSection } from "@/components/sections/ProcessSection";
-import { RoiCalculatorSection } from "@/components/sections/RoiCalculatorSection";
 import { SimulatorSection } from "@/components/sections/SimulatorSection";
 import { SystemsShowcaseSection } from "@/components/sections/SystemsShowcaseSection";
 import { FAQ_ITEMS } from "@/lib/copy";
@@ -16,18 +15,18 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Service",
-      name: "Relay60 Done-For-You 60-Second AI Lead Response",
+      name: "Relay Systems AI Automation",
       provider: {
         "@type": "Organization",
-        name: "Relay60",
-        url: "https://relay60.com",
-        email: "hello@relay60.com",
+        name: "Relay Systems",
+        url: "https://relayops.io",
+        email: "hello@relayops.io",
       },
       areaServed: ["US", "GB"],
-      serviceType: "Automated Lead Response, CRM Integration, and Appointment Scheduling",
+      serviceType: "AI Workflow Automation, Inbound Operations, CRM Integration, and Appointment Booking",
       offers: [
-        { "@type": "Offer", price: "497", priceCurrency: "USD" },
-        { "@type": "Offer", price: "397", priceCurrency: "GBP" },
+        { "@type": "Offer", price: "4500", priceCurrency: "USD" },
+        { "@type": "Offer", price: "3500", priceCurrency: "GBP" },
       ],
     },
     {
@@ -51,7 +50,6 @@ export default function HomePage() {
       <CapabilitiesSection />
       <ConnectedStackSection />
       <ProcessSection />
-      <RoiCalculatorSection />
       <EngineeringStandardSection />
       <PricingSection />
       <FaqSection />

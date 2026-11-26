@@ -6,7 +6,7 @@ export const TOKEN = {
   SECTION_ANCHOR: "scroll-mt-24",
   EYEBROW_WRAP: "inline-flex items-center gap-2.5 text-xs font-medium tracking-wide text-slate-400",
   EYEBROW_DASH: "h-[2px] w-3 rounded-full bg-sky-400",
-  H1: "font-heading text-4xl font-light tracking-[-0.035em] text-white sm:text-5xl lg:text-[4.25rem] lg:leading-[1.03]",
+  H1: "font-heading text-4xl font-light tracking-[-0.025em] text-white sm:text-5xl lg:text-[3.75rem] lg:leading-[1.06]",
   H2: "font-heading text-3xl font-light tracking-[-0.03em] text-white sm:text-4xl lg:text-[2.85rem] lg:leading-[1.08]",
   H3: "font-heading text-xl font-medium tracking-[-0.02em] text-white sm:text-2xl",
   BODY_LG: "text-base leading-relaxed text-slate-400 sm:text-lg",

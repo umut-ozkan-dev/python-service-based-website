@@ -29,13 +29,12 @@ const monoFont = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Relay60 | Done-For-You 60-Second AI Lead Response & Booking for US & UK Businesses",
+  title: "Relay | AI Automation Agency — Production Systems for Operations",
   description:
-    "Never lose another enquiry to a slow callback. Relay60 answers Web Form, SMS, and Email leads in under 60 seconds, syncs your CRM, and books appointments 24/7.",
+    "We design, build, and maintain custom AI workflows for growing businesses—connecting your inbox, CRM, documents, and internal tools with clear human oversight.",
   openGraph: {
-    title: "Relay60 — Every Enquiry Answered, Qualified & Booked in Under 60 Seconds",
-    description:
-      "Done-for-you 60-second AI lead response, CRM logging, and calendar booking for appointment-based businesses in the US & UK.",
+    title: "Relay | AI Automation Agency — Production Systems for Operations",
+    description: "Custom AI workflows for growing businesses, with clear human oversight.",
     type: "website",
     siteName: "Relay60",
   },

@@ -1,10 +1,9 @@
 "use client";
 
-import { ArrowUp, Mail, PhoneCall } from "lucide-react";
+import { ArrowUp, Mail } from "lucide-react";
 import Link from "next/link";
 
 import { FOOTER_COPY, FOOTER_LINKS } from "@/lib/copy";
-import { REGION_CONFIG } from "@/lib/region-config";
 import { TOKEN } from "@/lib/tokens";
 
 export function Footer() {
@@ -13,23 +12,16 @@ export function Footer() {
       <div className={`${TOKEN.CONTAINER} grid grid-cols-1 gap-10 md:grid-cols-3`}>
         <div>
           <p className="font-heading text-lg font-semibold text-white">
-            relay60<span className="text-sky-400">.</span>
+            relay<span className="text-sky-400">.</span>
           </p>
           <p className={`${TOKEN.BODY_SM} mt-3`}>{FOOTER_COPY.summary}</p>
         </div>
         <div className="space-y-2 text-sm text-slate-300">
-          <a className="flex items-center gap-2 hover:text-white" href="mailto:hello@relay60.com">
+          <a className="flex items-center gap-2 hover:text-white" href={`mailto:${FOOTER_COPY.email}`}>
             <Mail className="h-4 w-4" aria-hidden="true" />
             {FOOTER_COPY.email}
           </a>
-          <p className="flex items-center gap-2">
-            <PhoneCall className="h-4 w-4" aria-hidden="true" />
-            US Line {REGION_CONFIG.US.displayPhone}
-          </p>
-          <p className="flex items-center gap-2">
-            <PhoneCall className="h-4 w-4" aria-hidden="true" />
-            UK Line {REGION_CONFIG.UK.displayPhone}
-          </p>
+          <p className="text-sm text-slate-400">{FOOTER_COPY.location}</p>
         </div>
         <div className="flex flex-col gap-2 text-sm">
           {FOOTER_LINKS.map((link) => (

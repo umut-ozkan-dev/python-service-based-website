@@ -1,3 +1,4 @@
+import { SmokedGlassStack } from "@/components/visuals/SmokedGlassStack";
 import { INTEGRATION_PILLS, STACK_COPY } from "@/lib/copy";
 import { TOKEN } from "@/lib/tokens";
 
@@ -14,7 +15,8 @@ export function ConnectedStackSection() {
           <span className="block font-semibold">{STACK_COPY.line2}</span>
         </h2>
         <p className={`${TOKEN.BODY_LG} mt-4 max-w-2xl`}>{STACK_COPY.subtitle}</p>
-        <div className="mt-14 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <SmokedGlassStack />
+        <div className="mt-4 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {STACK_COPY.pillars.map((pillar) => (
             <article key={pillar.num} className="border-t border-white/[0.12] pt-5">
               <p className="font-mono text-xs text-sky-400">{pillar.num}</p>

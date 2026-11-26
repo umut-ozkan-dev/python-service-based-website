@@ -7,15 +7,15 @@ import { FAQ_COPY, FAQ_ITEMS } from "@/lib/copy";
 import { TOKEN } from "@/lib/tokens";
 
 export function FaqSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   return (
-    <section id="faq" className={`${TOKEN.SECTION_PY} ${TOKEN.SECTION_BORDER} ${TOKEN.SECTION_ANCHOR}`}>
+    <section id="faq" className="scroll-mt-28 border-t border-white/[0.07] py-28 sm:py-36">
       <div className={`${TOKEN.CONTAINER} grid gap-12 lg:grid-cols-12`}>
         <div className="lg:sticky lg:top-28 lg:col-span-4 lg:self-start">
           <p className={TOKEN.EYEBROW_WRAP}><span className={TOKEN.EYEBROW_DASH} />{FAQ_COPY.eyebrow}</p>
           <h2 className={`${TOKEN.H2} mt-4`}>{FAQ_COPY.heading}</h2>
           <p className={`${TOKEN.BODY_SM} mt-4`}>{FAQ_COPY.subtitle}</p>
-          <a href="mailto:hello@relay60.com" className="mt-6 inline-block text-sm text-sky-300 hover:text-sky-200">hello@relay60.com</a>
+          <a href="mailto:hello@relayops.io" className="mt-6 inline-block text-sm text-sky-300 hover:text-sky-200">hello@relayops.io</a>
         </div>
         <div className="divide-y divide-white/[0.08] border-y border-white/[0.08] lg:col-span-8">
           {FAQ_ITEMS.map((item, idx) => {

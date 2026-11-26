@@ -1,14 +1,14 @@
 "use client";
 
-import { AlertCircle, Calendar, CheckCircle2, ExternalLink, Loader2, Lock } from "lucide-react";
+import { AlertCircle, CheckCircle2, ExternalLink, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { useRegion } from "@/context/RegionContext";
 import { ApiClientError, createLeadApi } from "@/lib/api";
-import { CONTACT_STRIP, FORM_COPY, VERTICAL_OPTIONS, VOLUME_OPTIONS, WINDOW_OPTIONS } from "@/lib/copy";
+import { CONTACT_STRIP, FOCUS_OPTIONS, FORM_COPY, TEAM_OPTIONS, WINDOW_OPTIONS } from "@/lib/copy";
 import { TOKEN } from "@/lib/tokens";
-import type { IndustryVertical, LeadCreateResponse, MonthlyLeadVolume, PreferredTimeWindow } from "@/lib/types";
+import type { AutomationFocus, LeadCreateResponse, PreferredTimeWindow, TeamSize } from "@/lib/types";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -28,19 +28,14 @@ export function LeadBookingSection() {
   const [workEmail, setWorkEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [businessName, setBusinessName] = useState("");
-  const [websiteUrl, setWebsiteUrl] = useState("");
-  const [vertical, setVertical] = useState<IndustryVertical>("dental");
-  const [monthlyLeadVolume, setMonthlyLeadVolume] = useState<MonthlyLeadVolume>("30_to_75");
+  const [teamSize, setTeamSize] = useState<TeamSize>("11_to_50");
+  const [automationFocus, setAutomationFocus] = useState<AutomationFocus>("inbound_leads");
   const [currentTools, setCurrentTools] = useState("");
   const [preferredTimeWindow, setPreferredTimeWindow] = useState<PreferredTimeWindow>("first_available");
   const [notes, setNotes] = useState("");
   const [smsConsent, setSmsConsent] = useState(false);
   const [privacyConsent, setPrivacyConsent] = useState(false);
-  const [utmParams, setUtmParams] = useState<{
-    utm_source: string | null;
-    utm_medium: string | null;
-    utm_campaign: string | null;
-  }>({ utm_source: null, utm_medium: null, utm_campaign: null });
+  const [utmParams, setUtmParams] = useState({ utm_source: null as string | null, utm_medium: null as string | null, utm_campaign: null as string | null });
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,19 +43,17 @@ export function LeadBookingSection() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    setUtmParams({
-      utm_source: params.get("utm_source"),
-      utm_medium: params.get("utm_medium"),
-      utm_campaign: params.get("utm_campaign"),
-    });
+    setUtmParams({ utm_source: params.get("utm_source"), utm_medium: params.get("utm_medium"), utm_campaign: params.get("utm_campaign") });
   }, []);
 
   function validateForm(): boolean {
     const next: Record<string, string> = {};
+    const digits = phone.replace(/\D/g, "");
     if (fullName.trim().length < 2) next.full_name = FORM_COPY.errors.full_name;
     if (!EMAIL_RE.test(workEmail.trim())) next.work_email = FORM_COPY.errors.work_email;
-    if (phone.replace(/\D/g, "").length < 10) next.phone = FORM_COPY.errors.phone;
     if (businessName.trim().length < 2) next.business_name = FORM_COPY.errors.business_name;
+    if (digits.length > 0 && digits.length < 10) next.phone = FORM_COPY.errors.phone;
+    if (smsConsent && digits.length < 10) next.phone = FORM_COPY.errors.sms_phone;
     if (privacyConsent !== true) next.privacy_consent = FORM_COPY.errors.privacy_consent;
     setFieldErrors(next);
     const first = Object.keys(next)[0];
@@ -80,16 +73,15 @@ export function LeadBookingSection() {
       const result = await createLeadApi({
         full_name: fullName.trim(),
         work_email: workEmail.trim(),
-        phone: phone.trim(),
         business_name: businessName.trim(),
-        website_url: websiteUrl.trim() || null,
-        vertical,
+        phone: phone.trim() || null,
         region,
-        monthly_lead_volume: monthlyLeadVolume,
+        team_size: teamSize,
+        automation_focus: automationFocus,
         current_tools: currentTools.trim() || null,
         preferred_time_window: preferredTimeWindow,
         notes: notes.trim() || null,
-        sms_consent: smsConsent,
+        sms_consent: smsConsent && phone.trim().length > 0,
         privacy_consent: true,
         utm_source: utmParams.utm_source,
         utm_medium: utmParams.utm_medium,
@@ -102,7 +94,7 @@ export function LeadBookingSection() {
         if (error.fieldErrors) setFieldErrors((current) => ({ ...current, ...error.fieldErrors }));
         setFormError(error.message);
       } else {
-        setFormError("Unable to reach the Relay60 server. Please check your connection and try again.");
+        setFormError("Unable to reach the server. Please check your connection and try again.");
       }
     } finally {
       setIsSubmitting(false);
@@ -126,77 +118,33 @@ export function LeadBookingSection() {
               </>
             );
             return card.href ? (
-              <a key={card.label} href={card.href} className="rounded-2xl border border-white/[0.08] bg-[#0A0C10] p-5 transition-colors hover:border-white/20">
-                {inner}
-              </a>
+              <a key={card.label} href={card.href} className="rounded-2xl border border-white/[0.08] bg-[#0A0C10] p-5 transition-colors hover:border-white/20">{inner}</a>
             ) : (
-              <div key={card.label} className="rounded-2xl border border-white/[0.08] bg-[#0A0C10] p-5">
-                {inner}
-              </div>
+              <div key={card.label} className="rounded-2xl border border-white/[0.08] bg-[#0A0C10] p-5">{inner}</div>
             );
           })}
         </div>
-        <p className={TOKEN.EYEBROW_WRAP}>
-          <span className={TOKEN.EYEBROW_DASH} />
-          {FORM_COPY.eyebrow}
-        </p>
+        <p className={TOKEN.EYEBROW_WRAP}><span className={TOKEN.EYEBROW_DASH} />{FORM_COPY.eyebrow}</p>
         <h2 className={`${TOKEN.H2} mt-4`}>
           <span className="block font-light">{FORM_COPY.line1}</span>
           <span className="block font-semibold">{FORM_COPY.line2}</span>
         </h2>
         <p className={`${TOKEN.BODY_LG} mt-4 max-w-3xl`}>{FORM_COPY.subtitle}</p>
-
         {submissionResult ? (
           <div className={`${TOKEN.PANEL} mt-10`}>
-            <p className={TOKEN.BADGE_LIVE}>
-              <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
-              Pipeline confirmed
-            </p>
-            <h3 className={`${TOKEN.H3} mt-4`}>{submissionResult.confirmation_headline}</h3>
-            <p className={`${TOKEN.BODY_SM} mt-3`}>{submissionResult.confirmation_message}</p>
-            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className={TOKEN.PANEL_INSET}>
-                <p className="inline-flex items-center gap-2 text-sm text-white">
-                  <Lock className="h-4 w-4" aria-hidden="true" />
-                  {FORM_COPY.proofLead}
-                </p>
-                <p className={`${TOKEN.MONO_TAG} mt-2 break-all text-sky-300`}>{submissionResult.lead_id}</p>
-                <p className="text-xs text-slate-500">{submissionResult.submitted_at}</p>
-              </div>
-              <div className={TOKEN.PANEL_INSET}>
-                <p className="inline-flex items-center gap-2 text-sm text-white">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-300" aria-hidden="true" />
-                  {FORM_COPY.proofEmail}
-                </p>
-                <p className="mt-2 text-sm text-slate-400">{FORM_COPY.proofEmailStatus}</p>
-              </div>
-              <div className={TOKEN.PANEL_INSET}>
-                <p className="text-sm text-white">{FORM_COPY.proofSms}</p>
-                <p className="mt-2 text-sm text-slate-400">
-                  {submissionResult.sms_ack_queued ? FORM_COPY.proofSmsQueued : FORM_COPY.proofSmsSkipped}
-                </p>
-              </div>
-              <div className={TOKEN.PANEL_INSET}>
-                <p className="inline-flex items-center gap-2 text-sm text-white">
-                  <Calendar className="h-4 w-4" aria-hidden="true" />
-                  {FORM_COPY.proofWindow}
-                </p>
-                <p className="mt-2 text-sm text-slate-400">{windowLabel}</p>
-              </div>
+            <p className={TOKEN.BADGE_LIVE}><CheckCircle2 className="h-3.5 w-3.5" />{FORM_COPY.confirmBadge}</p>
+            <h3 className={`${TOKEN.H3} mt-4`}>{FORM_COPY.confirmTitle}</h3>
+            <p className={`${TOKEN.BODY_SM} mt-3`}>{FORM_COPY.confirmBody}</p>
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div className={TOKEN.PANEL_INSET}><p className="text-xs text-slate-500">{FORM_COPY.confirmRefLabel}</p><p className={`${TOKEN.MONO_TAG} mt-2 text-sky-300`}>{submissionResult.lead_id.slice(0, 8).toUpperCase()}</p></div>
+              <div className={TOKEN.PANEL_INSET}><p className="text-xs text-slate-500">{FORM_COPY.confirmWindowLabel}</p><p className="mt-2 text-sm text-white">{windowLabel}</p></div>
+              <div className={TOKEN.PANEL_INSET}><p className="text-xs text-slate-500">{FORM_COPY.confirmStatusLabel}</p><p className="mt-2 text-sm text-white">{FORM_COPY.confirmStatus}</p></div>
             </div>
             {showEmbed ? (
               <div className="mt-6">
                 <p className={TOKEN.BODY_SM}>{FORM_COPY.embedPrompt}</p>
-                <iframe
-                  src={embedUrl}
-                  title="Schedule your 15-minute Relay60 setup call"
-                  className="mt-6 h-[620px] w-full rounded-xl border border-white/[0.08] bg-[#06080B]"
-                  loading="lazy"
-                />
-                <a href={embedUrl} className={`${TOKEN.BTN_SECONDARY} mt-4`} target="_blank" rel="noreferrer">
-                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
-                  Open scheduler
-                </a>
+                <iframe src={embedUrl} title="Schedule your 15-minute Relay setup call" className="mt-6 h-[620px] w-full rounded-xl border border-white/[0.08] bg-[#06080B]" loading="lazy" />
+                <a href={embedUrl} className={`${TOKEN.BTN_SECONDARY} mt-4`} target="_blank" rel="noreferrer"><ExternalLink className="h-4 w-4" />Open scheduler</a>
               </div>
             ) : null}
           </div>
@@ -216,60 +164,50 @@ export function LeadBookingSection() {
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
+                <label htmlFor="business_name" className={TOKEN.LABEL}>{FORM_COPY.businessLabel}</label>
+                <input id="business_name" className={TOKEN.INPUT} value={businessName} placeholder={FORM_COPY.businessPlaceholder} onChange={(event) => setBusinessName(event.target.value)} />
+                <FieldError message={fieldErrors.business_name} />
+              </div>
+              <div>
                 <label htmlFor="phone" className={TOKEN.LABEL}>{FORM_COPY.phoneLabel}</label>
                 <input id="phone" className={TOKEN.INPUT} value={phone} placeholder={config.phonePlaceholder} onChange={(event) => setPhone(event.target.value)} />
                 <p className="mt-1.5 text-xs text-slate-500">{FORM_COPY.phoneHelper}</p>
                 <FieldError message={fieldErrors.phone} />
               </div>
-              <div>
-                <label htmlFor="business_name" className={TOKEN.LABEL}>{FORM_COPY.businessLabel}</label>
-                <input id="business_name" className={TOKEN.INPUT} value={businessName} placeholder={FORM_COPY.businessPlaceholder} onChange={(event) => setBusinessName(event.target.value)} />
-                <FieldError message={fieldErrors.business_name} />
-              </div>
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label htmlFor="vertical" className={TOKEN.LABEL}>{FORM_COPY.verticalLabel}</label>
-                <select id="vertical" className={TOKEN.SELECT} value={vertical} onChange={(event) => setVertical(event.target.value as IndustryVertical)}>
-                  {VERTICAL_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>{option.label}</option>
-                  ))}
+                <label htmlFor="team_size" className={TOKEN.LABEL}>{FORM_COPY.teamLabel}</label>
+                <select id="team_size" className={TOKEN.SELECT} value={teamSize} onChange={(event) => setTeamSize(event.target.value as TeamSize)}>
+                  {TEAM_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
                 </select>
               </div>
               <div>
-                <label htmlFor="monthly_lead_volume" className={TOKEN.LABEL}>{FORM_COPY.volumeLabel}</label>
-                <select id="monthly_lead_volume" className={TOKEN.SELECT} value={monthlyLeadVolume} onChange={(event) => setMonthlyLeadVolume(event.target.value as MonthlyLeadVolume)}>
-                  {VOLUME_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>{option.label}</option>
-                  ))}
+                <label htmlFor="automation_focus" className={TOKEN.LABEL}>{FORM_COPY.focusLabel}</label>
+                <select id="automation_focus" className={TOKEN.SELECT} value={automationFocus} onChange={(event) => setAutomationFocus(event.target.value as AutomationFocus)}>
+                  {FOCUS_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
                 </select>
               </div>
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <label htmlFor="website_url" className={TOKEN.LABEL}>{FORM_COPY.websiteLabel}</label>
-                <input id="website_url" className={TOKEN.INPUT} value={websiteUrl} placeholder={FORM_COPY.websitePlaceholder} onChange={(event) => setWebsiteUrl(event.target.value)} />
-              </div>
               <div>
                 <label htmlFor="current_tools" className={TOKEN.LABEL}>{FORM_COPY.toolsLabel}</label>
                 <input id="current_tools" className={TOKEN.INPUT} value={currentTools} placeholder={FORM_COPY.toolsPlaceholder} onChange={(event) => setCurrentTools(event.target.value)} />
               </div>
-            </div>
-            <div>
-              <label htmlFor="preferred_time_window" className={TOKEN.LABEL}>{FORM_COPY.windowLabel}</label>
-              <select id="preferred_time_window" className={TOKEN.SELECT} value={preferredTimeWindow} onChange={(event) => setPreferredTimeWindow(event.target.value as PreferredTimeWindow)}>
-                {WINDOW_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
+              <div>
+                <label htmlFor="preferred_time_window" className={TOKEN.LABEL}>{FORM_COPY.windowLabel}</label>
+                <select id="preferred_time_window" className={TOKEN.SELECT} value={preferredTimeWindow} onChange={(event) => setPreferredTimeWindow(event.target.value as PreferredTimeWindow)}>
+                  {WINDOW_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                </select>
+              </div>
             </div>
             <div>
               <label htmlFor="notes" className={TOKEN.LABEL}>{FORM_COPY.notesLabel}</label>
-              <textarea id="notes" className={TOKEN.INPUT} rows={2} value={notes} placeholder={FORM_COPY.notesPlaceholder} onChange={(event) => setNotes(event.target.value)} />
+              <textarea id="notes" className={TOKEN.INPUT} rows={3} value={notes} placeholder={FORM_COPY.notesPlaceholder} onChange={(event) => setNotes(event.target.value)} />
             </div>
             <div className="rounded-xl border border-white/[0.08] bg-[#06080B] p-4">
               <label className="flex items-start gap-3 text-xs leading-relaxed text-slate-400">
-                <input type="checkbox" className={TOKEN.CHECKBOX} checked={smsConsent} onChange={(event) => setSmsConsent(event.target.checked)} />
+                <input type="checkbox" className={TOKEN.CHECKBOX} checked={smsConsent} disabled={phone.trim().length === 0} onChange={(event) => setSmsConsent(event.target.checked)} />
                 <span>{FORM_COPY.smsConsent}</span>
               </label>
             </div>
@@ -286,12 +224,7 @@ export function LeadBookingSection() {
               </label>
               <FieldError message={fieldErrors.privacy_consent} />
             </div>
-            {formError ? (
-              <p className="flex items-center gap-2 rounded-xl border border-rose-500/25 bg-rose-500/10 px-3 py-2 text-sm text-rose-300">
-                <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-                {formError}
-              </p>
-            ) : null}
+            {formError ? <p className="flex items-center gap-2 rounded-xl border border-rose-500/25 bg-rose-500/10 px-3 py-2 text-sm text-rose-300"><AlertCircle className="h-4 w-4 shrink-0" />{formError}</p> : null}
             <button type="submit" className={`${TOKEN.BTN_PRIMARY} w-full py-3.5`} disabled={isSubmitting}>
               {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
               {isSubmitting ? FORM_COPY.submitBusy : FORM_COPY.submitIdle}

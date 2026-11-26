@@ -11,6 +11,7 @@ from app.core.errors import AppError
 from app.core.security import require_admin_api_key
 from app.models.enums import (
     ALLOWED_ADMIN_TRANSITIONS,
+    AutomationFocus,
     IndustryVertical,
     LeadResponseStatus,
     RegionCode,
@@ -26,12 +27,14 @@ router = APIRouter(
 )
 
 
-def _lead_filters(region, vertical, status):
+def _lead_filters(region, vertical, status, focus):
     clauses = []
     if region is not None:
         clauses.append(Lead.region == region)
     if vertical is not None:
         clauses.append(Lead.vertical == vertical)
+    if focus is not None:
+        clauses.append(Lead.automation_focus == focus)
     if status is not None:
         clauses.append(Lead.response_status == status)
     return clauses
@@ -44,9 +47,10 @@ async def list_leads(
     offset: int = Query(0, ge=0),
     region: RegionCode | None = None,
     vertical: IndustryVertical | None = None,
+    focus: AutomationFocus | None = None,
     status: LeadResponseStatus | None = None,
 ) -> LeadListResponse:
-    clauses = _lead_filters(region, vertical, status)
+    clauses = _lead_filters(region, vertical, status, focus)
     count_stmt = select(func.count(Lead.id))
     list_stmt = select(Lead).order_by(Lead.created_at.desc()).offset(offset).limit(limit)
     for clause in clauses:

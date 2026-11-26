@@ -43,9 +43,11 @@ def register_exception_handlers(app: FastAPI) -> None:
         for err in exc.errors():
             loc = err.get("loc") or ()
             key = str(loc[-1]) if loc else "body"
+            message = str(err.get("msg", "Invalid value."))
+            if key == "body" and "phone number to enable optional text updates" in message:
+                key = "phone"
             if key in field_errors:
                 continue
-            message = str(err.get("msg", "Invalid value."))
             prefix = "Value error, "
             if message.startswith(prefix):
                 message = message[len(prefix) :]

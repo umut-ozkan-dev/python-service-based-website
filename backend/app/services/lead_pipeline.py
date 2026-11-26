@@ -42,7 +42,7 @@ async def execute_lead_dispatch_pipeline(
             DispatchChannel.EMAIL_ACK,
             {
                 "to": lead.work_email,
-                "subject": f"Relay60 Instant Confirmation — {lead.business_name}",
+                "subject": f"Relay Systems — Enquiry Received ({lead.business_name})",
                 "preferred_time_window": lead.preferred_time_window.value,
                 "full_name": lead.full_name,
                 "business_name": lead.business_name,
@@ -50,7 +50,7 @@ async def execute_lead_dispatch_pipeline(
         )
         logs.append(_log_from_result(lead.id, DispatchChannel.EMAIL_ACK, email_result))
 
-        if lead.sms_consent is False:
+        if lead.sms_consent is False or not lead.phone:
             logs.append(
                 LeadDispatchLog(
                     lead_id=lead.id,
@@ -58,7 +58,11 @@ async def execute_lead_dispatch_pipeline(
                     adapter_used="compliance_gate",
                     status=DispatchStatus.SKIPPED,
                     latency_ms=0,
-                    payload_preview='{"reason": "sms_consent_false"}',
+                    payload_preview=(
+                        '{"reason": "sms_consent_false"}'
+                        if lead.sms_consent is False
+                        else '{"reason": "phone_missing"}'
+                    ),
                     error_detail=None,
                 )
             )
@@ -68,7 +72,8 @@ async def execute_lead_dispatch_pipeline(
                 {
                     "to": lead.phone,
                     "body": (
-                        f"Relay60 confirmation for {lead.business_name}: your enquiry is logged "
+                        "Relay Systems confirmation for "
+                        f"{lead.business_name}: your enquiry is logged "
                         "and a setup call is being reserved. Reply STOP to opt out. "
                         "Reply HELP for help. Msg & data rates may apply."
                     ),
@@ -100,7 +105,11 @@ async def execute_lead_dispatch_pipeline(
                 "business_name": lead.business_name,
                 "vertical": lead.vertical.value,
                 "region": lead.region.value,
-                "monthly_lead_volume": lead.monthly_lead_volume.value,
+                "monthly_lead_volume": (
+                    lead.monthly_lead_volume.value if lead.monthly_lead_volume else None
+                ),
+                "team_size": lead.team_size.value,
+                "automation_focus": lead.automation_focus.value,
                 "preferred_time_window": lead.preferred_time_window.value,
             },
         )

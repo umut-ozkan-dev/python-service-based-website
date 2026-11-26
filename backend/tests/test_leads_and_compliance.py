@@ -7,12 +7,12 @@ from app.models.lead import Lead, LeadDispatchLog
 def _lead_payload(**overrides):
     payload = {
         "full_name": "Sarah Jenkins",
-        "work_email": "sarah@oakridge.example",
-        "phone": "(512) 555-0194",
-        "business_name": "Oakridge Dental Studio",
-        "vertical": "dental",
+        "work_email": "sarah@northline.example",
+        "phone": "(512) 555-0148",
+        "business_name": "Northline Ops",
         "region": "US",
-        "monthly_lead_volume": "30_to_75",
+        "team_size": "11_to_50",
+        "automation_focus": "inbound_leads",
         "preferred_time_window": "morning",
         "sms_consent": False,
         "privacy_consent": True,
@@ -27,10 +27,12 @@ async def test_create_lead_without_sms_consent_succeeds_and_skips_sms_dispatch(c
     body = response.json()
     assert body["sms_ack_queued"] is False
     assert body["email_ack_queued"] is True
+    assert body["confirmation_headline"] == "Enquiry received."
     async with db_maker() as session:
         lead = (await session.execute(select(Lead))).scalar_one()
         logs = (await session.execute(select(LeadDispatchLog))).scalars().all()
-    assert lead.phone == "+15125550194"
+    assert lead.phone == "+15125550148"
+    assert lead.vertical.value == "lead_ops"
     assert lead.response_status == "responded"
     assert len(logs) == 4
     by_channel = {log.channel: log.status for log in logs}
@@ -45,9 +47,10 @@ async def test_create_lead_with_sms_consent_dispatches_all_four_channels(client,
         "/api/v1/leads",
         json=_lead_payload(
             region="UK",
-            phone="07700 900412",
+            phone="07700 900214",
             work_email="hannah@thames.example",
             sms_consent=True,
+            automation_focus="client_onboarding",
         ),
     )
     assert response.status_code == 201
@@ -55,9 +58,32 @@ async def test_create_lead_with_sms_consent_dispatches_all_four_channels(client,
     async with db_maker() as session:
         lead = (await session.execute(select(Lead))).scalar_one()
         logs = (await session.execute(select(LeadDispatchLog))).scalars().all()
-    assert lead.phone == "+447700900412"
+    assert lead.phone == "+447700900214"
+    assert lead.vertical.value == "client_admin"
     assert len(logs) == 4
     assert all(log.status == DispatchStatus.SENT for log in logs)
+
+
+async def test_create_lead_without_phone_skips_sms(client, db_maker):
+    response = await client.post("/api/v1/leads", json=_lead_payload(phone=None, sms_consent=False))
+    assert response.status_code == 201
+    assert response.json()["sms_ack_queued"] is False
+    async with db_maker() as session:
+        lead = (await session.execute(select(Lead))).scalar_one()
+        logs = (await session.execute(select(LeadDispatchLog))).scalars().all()
+    assert lead.phone is None
+    sms = {log.channel: log.status for log in logs}[DispatchChannel.SMS_ACK]
+    assert sms == DispatchStatus.SKIPPED
+
+
+async def test_create_lead_rejects_sms_consent_without_phone(client, db_maker):
+    response = await client.post("/api/v1/leads", json=_lead_payload(phone=None, sms_consent=True))
+    assert response.status_code == 422
+    field_errors = response.json()["error"]["field_errors"]
+    assert "phone" in field_errors
+    async with db_maker() as session:
+        count = (await session.execute(select(func.count(Lead.id)))).scalar_one()
+    assert count == 0
 
 
 async def test_create_lead_rejects_missing_privacy_consent_with_422(client, db_maker):

@@ -5,11 +5,11 @@ def _lead_payload(**overrides):
     payload = {
         "full_name": "Alex Morgan",
         "work_email": "alex@yourbusiness.com",
-        "phone": "+15125550194",
-        "business_name": "Oakridge Dental Studio",
-        "vertical": "dental",
+        "phone": "+15125550148",
+        "business_name": "Northline Ops",
         "region": "US",
-        "monthly_lead_volume": "30_to_75",
+        "team_size": "11_to_50",
+        "automation_focus": "inbound_leads",
         "preferred_time_window": "first_available",
         "sms_consent": False,
         "privacy_consent": True,
@@ -33,7 +33,7 @@ async def test_admin_list_and_detail_return_leads_dispatch_logs_and_simulations(
     lead_id = created.json()["lead_id"]
     simulated = await client.post(
         "/api/v1/simulations/run",
-        json={"vertical": "dental", "channel": "email", "region": "US"},
+        json={"vertical": "lead_ops", "channel": "email", "region": "US"},
     )
     assert simulated.status_code == 200
 
@@ -41,7 +41,12 @@ async def test_admin_list_and_detail_return_leads_dispatch_logs_and_simulations(
     assert listing.status_code == 200
     body = listing.json()
     assert body["total"] == 1
+    assert body["items"][0]["automation_focus"] == "inbound_leads"
+    assert body["items"][0]["team_size"] == "11_to_50"
     assert len(body["recent_simulations"]) == 1
+    focused = await client.get("/api/v1/admin/leads?focus=internal_assistant", headers=ADMIN)
+    assert focused.status_code == 200
+    assert focused.json()["total"] == 0
 
     detail = await client.get(f"/api/v1/admin/leads/{lead_id}", headers=ADMIN)
     assert detail.status_code == 200

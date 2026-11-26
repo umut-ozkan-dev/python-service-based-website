@@ -7,10 +7,10 @@ class RegionCode(str, enum.Enum):
 
 
 class IndustryVertical(str, enum.Enum):
-    DENTAL = "dental"
-    MEDSPA = "medspa"
-    TRADES = "trades"
-    CLINICS_LEGAL = "clinics_legal"
+    LEAD_OPS = "lead_ops"
+    CLIENT_ADMIN = "client_admin"
+    DISPATCH_QUOTES = "dispatch_quotes"
+    INTERNAL_OPS = "internal_ops"
 
 
 class EnquiryChannel(str, enum.Enum):
@@ -24,6 +24,21 @@ class MonthlyLeadVolume(str, enum.Enum):
     FROM_30_TO_75 = "30_to_75"
     FROM_76_TO_200 = "76_to_200"
     OVER_200 = "200_plus"
+
+
+class TeamSize(str, enum.Enum):
+    SOLO_SMALL = "1_to_10"
+    GROWING = "11_to_50"
+    MID_MARKET = "51_to_200"
+    ENTERPRISE = "200_plus"
+
+
+class AutomationFocus(str, enum.Enum):
+    INBOUND_LEADS = "inbound_leads"
+    CLIENT_ONBOARDING = "client_onboarding"
+    CRM_DATA_SYNC = "crm_data_sync"
+    INTERNAL_ASSISTANT = "internal_assistant"
+    CUSTOM_WORKFLOW = "custom_workflow"
 
 
 class PreferredTimeWindow(str, enum.Enum):

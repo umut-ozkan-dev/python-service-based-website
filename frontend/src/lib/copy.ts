@@ -1,472 +1,355 @@
-import type { IndustryVertical, MonthlyLeadVolume, PreferredTimeWindow, RegionCode } from "@/lib/types";
+import type { AutomationFocus, IndustryVertical, PreferredTimeWindow, RegionCode, TeamSize } from "@/lib/types";
 
 export const CAPABILITIES_MENU = [
-  {
-    id: "lead-response",
-    title: "60-Second Lead Response",
-    desc: "Answer web forms, SMS, and email before prospects move on.",
-    href: "/#simulator",
-  },
-  {
-    id: "front-desk",
-    title: "AI Front-Desk & Triage",
-    desc: "Qualify intent, urgency, and area coverage without rigid menus.",
-    href: "/#capabilities",
-  },
-  {
-    id: "crm-sync",
-    title: "CRM & Record Sync",
-    desc: "Log contacts, deal tags, and full transcripts automatically.",
-    href: "/#stack",
-  },
-  {
-    id: "booking",
-    title: "Calendar & Dispatch Booking",
-    desc: "Confirm live appointment slots directly on your team calendar.",
-    href: "/#systems",
-  },
-  {
-    id: "follow-up",
-    title: "Multi-Touch Recovery",
-    desc: "Polite 14-day follow-up loops that stop when leads reply or book.",
-    href: "/#capabilities",
-  },
-  {
-    id: "escalation",
-    title: "Human Escalation Gates",
-    desc: "Pause automation and alert staff on clinical, legal, or edge cases.",
-    href: "/#engineering",
-  },
+  { id: "lead-response", title: "Inbound Lead & Sales Ops", desc: "Reply, qualify, update the CRM, and book the call.", href: "/#simulator" },
+  { id: "booking", title: "Client Onboarding & Admin", desc: "Collect documents and provision the workspace.", href: "/#systems" },
+  { id: "crm-sync", title: "CRM & Systems Integration", desc: "Two-way sync across the tools you already run.", href: "/#stack" },
+  { id: "follow-up", title: "Quote & Pipeline Follow-Up", desc: "Check-ins that stop the moment someone replies.", href: "/#capabilities" },
+  { id: "front-desk", title: "Internal AI Assistants", desc: "Answers grounded in your SOPs, with citations.", href: "/#capabilities" },
+  { id: "escalation", title: "Human-in-the-Loop Workflows", desc: "Approval gates and an audit trail your team can read.", href: "/#engineering" },
 ] as const;
 
 export const INDUSTRIES_MENU = [
-  {
-    id: "dental" as IndustryVertical,
-    title: "Dental & Orthodontics",
-    desc: "Invisalign, emergency exams, and after-hours new-patient bookings.",
-  },
-  {
-    id: "medspa" as IndustryVertical,
-    title: "Med Spa & Aesthetics",
-    desc: "Injectable consults, skin safety screening, and deposit links.",
-  },
-  {
-    id: "trades" as IndustryVertical,
-    title: "HVAC, Plumbing & Trades",
-    desc: "ZIP/postcode checks, same-day dispatch, and replacement surveys.",
-  },
-  {
-    id: "clinics_legal" as IndustryVertical,
-    title: "Physio, Chiro & Advisory",
-    desc: "Triage screening, matter intake, and practitioner scheduling.",
-  },
+  { id: "lead_ops", title: "Sales & Intake", desc: "Inbound requests, qualification, and diary booking." },
+  { id: "client_admin", title: "Client Onboarding", desc: "Document collection, checklists, and provisioning." },
+  { id: "dispatch_quotes", title: "Dispatch & Quoting", desc: "Coverage checks, quote drafts, and job cards." },
+  { id: "internal_ops", title: "Internal Ops", desc: "Policy lookup, citations, and owner handoff." },
 ] as const;
 
 export const HERO_COPY = {
-  line1: "Autonomous",
-  line2: "response systems",
-  line3: "engineered for",
-  line4: "service teams.",
-  cta: "See the system live",
-  captionLabel: "Lead & Operations Infrastructure",
-  caption1: "AI automation for US & UK appointment businesses.",
-  caption2: "Under-60-second replies. Zero dropped enquiries.",
-  rightPill: "60-Second Infrastructure",
-  thesis1: "From incoming enquiry",
-  thesis2: "to booked calendar slot.",
+  line1: "AI systems",
+  line2: "built to run",
+  line3: "operations.",
+  cta: "Explore live workflows",
+  captionLabel: "Relay Systems",
+  caption1: "Custom AI automation for US & UK operating teams.",
+  caption2: "Less repetitive admin. Faster handoffs. Clear human control.",
+  rightPill: "AI Automation Agency",
+  thesis1: "From incoming request",
+  thesis2: "to completed workflow.",
   pause: "Pause motion",
   resume: "Resume motion",
 };
 
 export const SYSTEMS_COPY = {
-  eyebrow: "Inside the systems",
-  line1: "Real pipelines.",
-  line2: "Closer telemetry.",
+  eyebrow: "Selected builds",
+  line1: "Production systems.",
+  line2: "Built around real teams.",
   recovered: { US: "$41,850", UK: "£32,900" } as Record<RegionCode, string>,
+  review: {
+    US: {
+      title: "Needs review · Commercial HVAC retrofit (Austin 78704)",
+      body: "$4,200 estimate drafted — paused for ops manager sign-off.",
+    },
+    UK: {
+      title: "Needs review · Commercial boiler replacement (London SW11)",
+      body: "£3,400 estimate drafted — paused for ops manager sign-off.",
+    },
+  } as Record<RegionCode, { title: string; body: string }>,
   one: {
-    tag: "Clinics & Multi-Channel / Inbound Command",
-    title: "Lead response and booking in one loop.",
-    summary: "Web form, SMS, and inbox triage connected straight to your CRM and live appointment calendar.",
-    link: "Inspect live workflow",
+    id: "lead_ops" as IndustryVertical,
+    tag: "Revenue & Intake / Autonomous Lead Desk",
+    title: "Multi-channel intake, CRM sync, and diary booking.",
+    summary: "Answers inbound forms, texts, and emails inside your rules, updates CRM records cleanly, and books qualified appointments without staff chasing.",
+    inspect: "Inspect architecture",
+    link: "Try live walkthrough",
   },
   two: {
-    tag: "Trades & Advisory / Autonomous Front Desk",
-    title: "Connected triage with human review gates.",
-    summary: "After-hours qualification and 5-touch recovery, paired with instant coordinator handoff on sensitive requests.",
-    link: "Test trades pipeline",
+    id: "dispatch_quotes" as IndustryVertical,
+    tag: "Operations & Field / Quoting & Admin Copilot",
+    title: "Quote drafting and triage with human sign-off.",
+    summary: "Checks coverage and job history, drafts structured estimates, chases open quotes, and pauses for manager approval on non-standard jobs.",
+    inspect: "Inspect architecture",
+    link: "Try live walkthrough",
   },
 };
+
+export const CASE_STUDIES = {
+  lead_ops: {
+    title: "Autonomous Lead Desk",
+    trigger: "A form, text, or email arrives outside office hours.",
+    reasoning: "The system checks hours, coverage, and the approved rate card before it replies.",
+    tools: "Inbox, HubSpot or Pipedrive, and the live calendar.",
+    rule: "Anything outside the rate card or the service area waits for a person.",
+  },
+  dispatch_quotes: {
+    title: "Quoting & Admin Copilot",
+    trigger: "A field request arrives with an address and a job type.",
+    reasoning: "Coverage is checked, then a structured estimate is drafted from the job history.",
+    tools: "ServiceTitan or Jobber, the CRM, and the dispatch board.",
+    rule: "Non-standard prices stay in review until a manager approves the draft.",
+  },
+} as const;
 
 export const SIMULATOR_COPY = {
   eyebrow: "Workflow studio",
-  line1: "See the system.",
-  line2: "Not just the promise.",
-  subtitle:
-    "Four real service verticals. Pick an industry and inbound channel—or type your own enquiry—to watch our live API execute reply, qualification, CRM logging, and booking.",
-  studioLeft: "relay60. / workflow studio",
-  studioRight: "Interactive example · simulated data",
+  line1: "See how the system runs.",
+  line2: "Step by step.",
+  subtitle: "Pick an operational track below—or type a realistic request—to inspect the automated decision steps, human approval boundary, and live JSON webhook payload.",
+  studioLeft: "relay. / workflow studio",
+  studioRight: "Simulated walkthrough · no live messages sent",
   tabs: {
-    dental: "01 Dental & Clinics",
-    medspa: "02 Med Spa",
-    trades: "03 Trades & Dispatch",
-    clinics_legal: "04 Physio & Legal",
+    lead_ops: "01 Sales & Intake",
+    client_admin: "02 Client Onboarding",
+    dispatch_quotes: "03 Dispatch & Quoting",
+    internal_ops: "04 Internal Ops",
   } as Record<IndustryVertical, string>,
-  stages: ["01 Enquiry received", "02 08s contextual reply", "03 CRM & rules synced", "04 Slot confirmed"],
-  presetMode: "Preset scenario",
-  customMode: "Custom enquiry",
-  placeholder: "e.g., Hi, do you have any urgent appointments tomorrow afternoon and what is the initial visit fee?",
-  restart: "Restart",
-  runIdle: "Start walkthrough",
-  runPlaying: "Running pipeline...",
-  runReplay: "Replay walkthrough",
-  boundaryTitle: "Connected context. Defined boundaries.",
-  boundaryBody:
-    "Autonomous inside your approved pricing and scheduling rules. Clinical, legal, or urgent exceptions pause immediately for human approval.",
-  footnote:
-    "An illustrative walkthrough powered by the Relay60 simulation API. No live customer messages are sent and no external records are modified.",
+  stages: ["1. Request arrives", "2. System replies", "3. Record updated", "4. Outcome confirmed"],
+  presetMode: "Sample request",
+  customMode: "Write your own",
+  placeholder: "e.g., Can you answer new demo requests and book a call if they fit our service area?",
+  restart: "Reset",
+  runIdle: "Run walkthrough",
+  runPlaying: "Running...",
+  runReplay: "Run again",
+  walkthroughMode: "Walkthrough",
+  jsonMode: "JSON Trace",
+  approve: "Approve & continue",
+  approved: "Approved by operator",
+  recordTitle: "System record",
+  outcomeTitle: "Outcome & dispatch",
+  waiting: "Run the walkthrough to see the outcome.",
+  boundaryTitle: "Human override rule",
+  boundaryBody: "The system only acts inside approved rules. Sensitive, priced, or incomplete work pauses and waits for your team.",
+  footnote: "Simulated example using sample operational data. No external emails, texts, or records are created.",
 };
 
 export const CAPABILITIES_COPY = {
-  eyebrow: "Capabilities",
-  line1: "AI operations",
-  line2: "built around your business.",
-  subtitle:
-    "Leading with 60-second inbound response, engineered as modular systems that remove repetitive front-desk and follow-up bottlenecks.",
+  eyebrow: "What we build",
+  line1: "Automation systems",
+  line2: "for operating teams.",
+  subtitle: "We start with the workflow that costs the most time, then connect the records around it so the handoff is visible.",
   cards: [
-    {
-      title: "60-Second Lead Response",
-      body: "Every web form, SMS, and email enquiry receives a tailored, human-grade reply within 60 seconds—day, night, and weekends.",
-    },
-    {
-      title: "AI Front-Desk & Triage",
-      body: "Asks your 1–3 qualification questions (area coverage, urgency, treatment or job scope) using your exact pricing rules and tone.",
-    },
-    {
-      title: "CRM & Pipeline Synchronization",
-      body: "Creates structured contacts, applies intent tags, updates pipeline stages, and attaches complete conversation transcripts automatically.",
-    },
-    {
-      title: "Calendar & Dispatch Booking",
-      body: "Reads real-time team availability and locks confirmed appointments or dispatch windows directly into your existing booking calendar.",
-    },
-    {
-      title: "Multi-Touch Recovery Loops",
-      body: "When a prospect gets distracted mid-thread, polite spaced follow-ups run across 14 days—and stop the second they reply or book.",
-    },
-    {
-      title: "Human Escalation & Audit",
-      body: "Strict domain guardrails prevent off-script pricing or clinical/legal advice. Edge cases pause automation and alert your team immediately.",
-    },
+    { title: "Inbound Lead & Sales Ops", body: "Instant response, qualification, CRM updates, and calendar booking across forms, email, and SMS." },
+    { title: "Client Onboarding & Admin", body: "Document collection, data extraction, checklist tracking, and workspace provisioning without manual chasing." },
+    { title: "CRM & Systems Integration", body: "Clean two-way syncing between legacy tools, CRMs, billing software, and internal databases." },
+    { title: "Internal AI Assistants", body: "Private team assistants grounded strictly in your SOPs, pricing rules, and client history with citations." },
+    { title: "Quote & Pipeline Follow-Up", body: "Timed, polite follow-ups on open proposals and unbooked enquiries that stop the instant a client responds." },
+    { title: "Human-in-the-Loop Workflows", body: "Explicit approval gates, confidence thresholds, and audit logs so sensitive decisions always stay with your team." },
   ],
 };
 
 export const STACK_COPY = {
-  eyebrow: "Connected infrastructure",
-  line1: "Your tools.",
-  line2: "One connected loop.",
-  subtitle: "Zero rip-and-replace. We wire directly into the inboxes, CRMs, and calendars your staff already open every morning.",
+  eyebrow: "Integrations",
+  line1: "Built around the software",
+  line2: "your team already uses.",
+  subtitle: "We review access, permissions, and the records that matter before anything is connected.",
   pillars: [
-    {
-      num: "01",
-      title: "Channels & Inboxes",
-      body: "Web forms, dedicated US/UK SMS numbers, and shared clinic or trade email inboxes routed into one pipeline.",
-    },
-    {
-      num: "02",
-      title: "CRM & Operations",
-      body: "Two-way reads and writes for contacts, job estimates, tags, and transcript audit trails without duplicate entries.",
-    },
-    {
-      num: "03",
-      title: "Calendars & Dispatch",
-      body: "Live slot availability across single-site calendars, multi-practitioner diaries, and territory dispatch boards.",
-    },
-    {
-      num: "04",
-      title: "Boundaries & Control",
-      body: "Explicit escalation triggers, quiet-hours scheduling, and instant STOP opt-out enforcement built at the system layer.",
-    },
+    { num: "01", title: "Inbox & messaging", body: "Forms, shared inboxes, and business SMS numbers in one queue." },
+    { num: "02", title: "CRM & records", body: "Reads the account first, then writes a structured note back." },
+    { num: "03", title: "Calendars & dispatch", body: "Checks real availability before a slot or arrival window is offered." },
+    { num: "04", title: "Rules & approvals", body: "Custom prices, missing documents, and edge cases stay with your team." },
   ],
 };
 
-export const INTEGRATION_PILLS = [
-  "HubSpot",
-  "GoHighLevel",
-  "ServiceTitan",
-  "Jobber",
-  "Pipedrive",
-  "Clio",
-  "Cliniko / Jane App",
-  "Google Calendar",
-  "Microsoft Outlook",
-  "Cal.com & Calendly",
-];
+export const INTEGRATION_PILLS = ["HubSpot", "Pipedrive", "ServiceTitan", "Jobber", "GoHighLevel", "Google Calendar", "Microsoft Outlook", "Slack", "Notion", "Cal.com"] as const;
 
 export const PROCESS_COPY = {
-  eyebrow: "Delivery cadence",
-  line1: "Audit. Architect.",
-  line2: "Connect. Operate.",
+  eyebrow: "How we work",
+  line1: "Scope. Build.",
+  line2: "Launch. Support.",
   steps: [
-    {
-      num: "01",
-      title: "Audit",
-      lead: "Map the bottlenecks.",
-      body: "A 15-minute review of your enquiry channels, response gaps, CRM fields, and booking rules with clear success targets.",
-    },
-    {
-      num: "02",
-      title: "Architect",
-      lead: "Engineer the playbook.",
-      body: "Custom response scripts, qualification logic, carrier setup, and strict escalation guardrails tested against realistic edge cases.",
-    },
-    {
-      num: "03",
-      title: "Connect",
-      lead: "Wire into your stack.",
-      body: "Live two-way hookup to your forms, SMS, email, CRM, and calendar—QA verified end-to-end within 7 business days.",
-    },
-    {
-      num: "04",
-      title: "Operate",
-      lead: "Monitor and refine.",
-      body: "Ongoing SLA monitoring, deliverability checks, seasonal offer tuning, and conversion reviews—month-to-month with zero lock-in.",
-    },
+    { num: "01", title: "Scope", lead: "Find the bottleneck.", body: "We map the request path, the tools involved, and the decisions a person still has to make." },
+    { num: "02", title: "Build", lead: "Test real cases.", body: "We write the rules, the failure paths, and the approval gates, then run them against examples from your team." },
+    { num: "03", title: "Launch", lead: "Connect live tools.", body: "We wire the inbox, CRM, and calendar, then sit with the operators for the first handoffs." },
+    { num: "04", title: "Support", lead: "Keep it current.", body: "When pricing, hours, or headcount change, we update the rules and watch the integration errors." },
   ],
-};
-
-export const ROI_COPY = {
-  eyebrow: "Revenue telemetry",
-  line1: "Quantify the cost",
-  line2: "of slow follow-up.",
-  subtitle: "Adjust the parameters below to model monthly enquiry leakage and payback speed against our fixed setup and monthly retainer.",
-  enquiriesLabel: "Monthly Inbound Enquiries (Web, SMS & Email)",
-  enquiriesTooltip: "Total new customer enquiries arriving across your website forms, email, and text messages each month.",
-  valueLabel: {
-    US: "Average Customer / Appointment Value ($ USD)",
-    UK: "Average Customer / Appointment Value (£ GBP)",
-  } as Record<RegionCode, string>,
-  valueTooltip: "Average first-visit ticket or lifetime job/treatment value of one booked customer.",
-  closeLabel: "Current Enquiry-to-Booking Close Rate (%)",
-  closeTooltip: "Percentage of raw inbound enquiries that currently end up as a confirmed appointment on your calendar.",
-  responseLabel: "Current Average Response Time",
-  responseTooltip: "Include evenings and weekends—when 42% of local service and clinic enquiries arrive.",
-  lostTitle: "Estimated Monthly Lost Revenue",
-  lostSub: "Leaking to faster local competitors",
-  recoveredTitle: "Projected Monthly Recovered Revenue",
-  netTitle: "Net Monthly Gain After Relay60 Plan",
-  paybackTitle: "Estimated Payback Period (Setup + Month 1)",
-  cta: "Book a 15-min walkthrough",
-  footnote:
-    "Illustrative projection modeled on published B2B/SMB speed-to-lead conversion decay benchmarks and a conservative 75% capture factor. Actual bookings depend on local demand, ad quality, and calendar capacity.",
 };
 
 export const ENGINEERING_COPY = {
-  eyebrow: "Direct engineering",
-  line1: "Systems that run",
-  line2: "while your team works.",
-  lead: "The engineers who scope your workflow are the engineers who build, integrate, and maintain it—no account-manager handoffs, no generic chatbot templates, and no bloated dashboard your staff has to babysit.",
-  quote:
-    "Most automation agencies sell noisy demos that break in week two. We engineer quiet, deterministic response and booking pipelines around how your business actually operates.",
+  eyebrow: "Why teams work with us",
+  line1: "Built by engineers.",
+  line2: "Run without babysitting.",
+  lead: "You work with the people who design and maintain the system. There is no separate account layer and no prompt your operators cannot inspect.",
+  quote: "Good automation should feel quiet. The record stays current, the reply is inside your rules, and a person steps in only when the decision is actually theirs.",
   metrics: [
-    { value: "< 60s", label: "Target response SLA" },
-    { value: "7 days", label: "Typical go-live window" },
-    { value: "14 days", label: "Cancel notice—zero lock-in" },
+    { value: "Direct", label: "Scoped and built by the same engineers" },
+    { value: "Auditable", label: "Every step written back to your system of record" },
+    { value: "Bounded", label: "A human gate when judgment is required" },
   ],
   layers: [
-    { layer: "01", title: "Autonomous Agents", desc: "Classify intent, reply naturally, handle triage" },
-    { layer: "02", title: "System Orchestration", desc: "One deterministic loop across web, SMS, and email" },
-    { layer: "03", title: "Guardrails & Escalation", desc: "Domain boundaries, quiet hours, instant staff alerts" },
-    { layer: "04", title: "CRM & Calendar Sync", desc: "Clean records, tags, transcripts, and confirmed slots" },
-    { layer: "05", title: "Your Daily Operation", desc: "The clinic, trade, or advisory team it all runs for" },
+    { layer: "01", title: "Capture", desc: "Forms, email, SMS, and internal questions" },
+    { layer: "02", title: "Decision layer", desc: "Rules, citations, and confidence limits" },
+    { layer: "03", title: "Execution", desc: "Replies, records, follow-ups, and bookings" },
+    { layer: "04", title: "Oversight", desc: "Approvals, logs, and manual takeover" },
   ],
 };
 
 export const PRICING_COPY = {
-  eyebrow: "Transparent terms",
-  line1: "Fixed setup.",
-  line2: "Predictable monthly.",
-  subtitle: "No enterprise quote games, no per-lead taxes, and no 12-month contracts. One saved booking a month typically covers the entire retainer.",
-  popular: "Recommended",
-  coreTitle: "Core Clinic & Trade Plan",
-  coreIdeal: "Single-location clinics, med spas, trades, and local practices handling up to 500 enquiries/month.",
-  coreSetupLabel: "One-Time Done-For-You Setup",
-  setupHeading: "Included in One-Time Setup",
-  monthlyHeading: "Included Every Month",
-  coreSetup: [
-    "Custom AI playbook trained on your services, pricing, FAQs & tone of voice",
-    "Web form, dedicated SMS number (A2P 10DLC / UK sender registration) & email hookup",
-    "Two-way integration with your existing CRM & booking calendar",
-    "Qualification triage rules + human escalation triggers configured",
-    "End-to-end QA testing & go-live within 7 business days",
-  ],
-  coreMonthly: [
-    "Up to 500 inbound enquiries/month answered in < 60 seconds (24/7/365)",
-    "Automated 5-touch polite follow-up sequence for non-bookers",
-    "Real-time CRM contact creation, deal tagging & transcript logging",
-    "Monthly prompt tuning, seasonal offer updates & deliverability monitoring",
-    "Cancel anytime with 14 days' notice—zero long-term lock-in",
-  ],
-  coreCta: "Start With Core Plan — Book 15-Min Call",
-  proTitle: "Multi-Location Pro Plan",
-  proIdeal: "Multi-site clinic groups, regional home-service fleets, and high-spend ad accounts up to 3 locations.",
-  proSetupLabel: "One-Time Multi-Site Setup",
-  proHeading: "Everything in Core, Plus",
-  proItems: [
-    "Up to 2,000 inbound enquiries/month across up to 3 locations",
-    "Multi-practitioner or territory postcode/ZIP round-robin calendar routing",
-    "Custom webhook & ad-conversion offline attribution sync (Google / Meta Ads)",
-    "Priority Slack or WhatsApp direct engineering support channel",
-    "Bi-weekly conversion rate review & script optimization",
-  ],
-  proCta: "Book Multi-Site Architecture Call",
-  guaranteeTitle: "The Double-Lock 7-Day Launch & 60-Second SLA Guarantee",
-  guaranteeBody:
-    "1) We launch your fully tested system within 7 business days of onboarding kick-off, or we refund 100% of your setup fee. 2) If Relay60 fails to respond to eligible inbound enquiries in under 60 seconds during your first 30 days live, your first monthly retainer is on us.",
+  eyebrow: "Engagement models",
+  line1: "Scoped cleanly.",
+  line2: "Priced upfront.",
+  subtitle: "Start with a focused 5-day workflow audit, ship a single production system at a fixed price, or retain our engineers across multiple departments.",
+  recommended: "Recommended",
+  monitorNote: "Optional monthly monitoring & tuning",
 };
 
+export const PRICING_TIERS = [
+  {
+    id: "audit",
+    kicker: "01 / Workflow Audit",
+    title: "5-day technical discovery",
+    ideal: "Map bottlenecks, review API/data access, and leave with a prioritized technical build plan.",
+    kind: "audit",
+    cadence: "one-time · 5 business days",
+    featured: false,
+    cta: "Book an audit",
+    items: [
+      "End-to-end operational bottleneck & ROI audit",
+      "Review of existing APIs, CRM schemas & permissions",
+      "Prioritized 90-day automation architecture roadmap",
+      "Fixed build estimates & security boundary plan",
+      "100% credited if you proceed to a build within 30 days",
+    ],
+  },
+  {
+    id: "build",
+    kicker: "02 / Production System",
+    title: "Single end-to-end build",
+    ideal: "One end-to-end AI workflow engineered, tested on real data, and connected to your live tools.",
+    kind: "build",
+    cadence: "one-time build",
+    featured: true,
+    cta: "Scope a build",
+    items: [
+      "One complete AI workflow engineered & QA tested",
+      "Two-way integration with your live CRM, inbox & tools",
+      "Custom guardrails, error retries & human approval gates",
+      "Operator handover walkthrough & full documentation",
+      "Optional monthly monitoring & tuning",
+    ],
+  },
+  {
+    id: "partner",
+    kicker: "03 / Embedded AI Partner",
+    title: "Multi-system automation",
+    ideal: "Dedicated systems engineering across sales ops, onboarding, internal copilots, and custom pipelines.",
+    kind: "partner",
+    cadence: "monthly",
+    featured: false,
+    cta: "Discuss partnership",
+    items: [
+      "Ongoing engineering across sales, admin & internal ops",
+      "Custom agent teams, document pipelines & copilots",
+      "Direct Slack or Teams channel with your build engineers",
+      "Proactive model evaluation, monitoring & uptime alerts",
+      "Rolling quarterly or monthly terms—no 12-month lock-in",
+    ],
+  },
+] as const;
+
 export const FAQ_COPY = {
-  eyebrow: "Straight answers",
+  eyebrow: "Questions",
   heading: "Straight answers.",
-  subtitle: "The operational questions clinic owners, trade operators, and partners ask before we build.",
+  subtitle: "The practical questions operators ask before a build starts.",
 };
 
 export const FAQ_ITEMS = [
-  {
-    question: "Will this sound like a pushy or robotic chatbot to my customers?",
-    answer:
-      "Never. We don't put a clunky 'press 1 for sales' widget on your site. Relay60 writes concise, warm, natural messages over real SMS and email tailored to your clinic or trade's exact terminology, pricing rules, and local area. Most customers assume they are texting your sharpest front-desk coordinator.",
-  },
-  {
-    question: "Do we have to switch away from our current CRM or booking calendar?",
-    answer:
-      "No. Relay60 connects directly to the tools your team already uses—including HubSpot, GoHighLevel, ServiceTitan, Jobber, Pipedrive, Clio, Cliniko, Jane App, Google Calendar, Outlook, and Cal.com/Calendly. Your staff keeps working inside their familiar calendar.",
-  },
-  {
-    question: "What happens if a customer asks a complex medical, legal, or urgent emergency question?",
-    answer:
-      "During setup, we program strict safety and escalation guardrails. Relay60 never gives clinical diagnoses, legal advice, or unapproved discounts. The moment an enquiry triggers an urgent, sensitive, or custom rule, Relay60 politely acknowledges the customer, pauses automation for that thread, and sends an instant alert to your team with the full transcript.",
-  },
-  {
-    question: "How long does setup take, and how much of my time does it require?",
-    answer:
-      "We go live within 7 business days. All we need from you is one 30-minute onboarding call plus access to your calendar/CRM webhook. Our engineering team handles 100% of the prompt architecture, carrier registration, integration wiring, and end-to-end QA.",
-  },
-  {
-    question: "How do SMS opt-outs, quiet hours, and US/UK carrier rules work?",
-    answer:
-      "Every workflow is built around permission-based messaging. For US businesses, we configure A2P 10DLC sender registration, express web-form opt-in language, local quiet-hours rules, and automatic STOP/HELP keyword handling under TCPA guidelines. For UK businesses, we configure dedicated +44 sender numbers, audit logging, encrypted transit, and instant STOP opt-out handling.",
-  },
-  {
-    question: "What if a lead doesn't reply or book right away?",
-    answer:
-      "Roughly half of booked appointments come from polite follow-up rather than the first message. If a prospect goes quiet, Relay60 runs a gentle, value-first 5-touch follow-up sequence across 14 days—and stops the instant they reply, book, or opt out.",
-  },
-  {
-    question: "Are we locked into a 6-month or 12-month agency contract?",
-    answer:
-      "No. After your one-time setup, the monthly plan is rolling month-to-month. You can pause or cancel anytime with 14 days' written notice before your next billing cycle.",
-  },
-  {
-    question: "Can you handle multiple clinic locations, practitioners, or service territories?",
-    answer:
-      "Yes. Our Multi-Location Pro Plan routes enquiries by postcode/ZIP code, treatment type, or round-robin practitioner availability across up to 3 locations—and we can scale further for larger groups.",
-  },
+  { question: "Will the replies sound like a generic chatbot?", answer: "No. Each workflow is written around your services, tone, and the questions your team already answers. Messages stay short and specific." },
+  { question: "Do we have to replace our CRM or calendar?", answer: "No. We connect to the system of record you already use. If the tool is older or custom, we look at its API or webhook during the audit." },
+  { question: "What happens on a sensitive or unusual request?", answer: "The workflow stops. It tells the person we have the request, alerts your team with the full context, and does not invent a price or a promise." },
+  { question: "How long does a build take?", answer: "A single production workflow is usually live within two weeks of kickoff, once we have access and a sign-off. Multi-system work is scoped with milestones first." },
+  { question: "How do opt-outs and quiet hours work?", answer: "Messaging is permission-based. Quiet hours, sender registration where it is required, and STOP handling are part of the system, not an afterthought." },
+  { question: "What if someone stops replying?", answer: "A short sequence of spaced check-ins can continue, and it ends the moment they reply, book, or opt out." },
+  { question: "Can our team take over a thread?", answer: "Yes. Every workflow has a manual takeover. When someone on your team steps in, the automation yields." },
+  { question: "Is there a long contract?", answer: "The audit and the production build are fixed fees. Ongoing monitoring, when you want it, is month to month with 14 days' notice." },
 ];
 
 export const CONTACT_STRIP = [
-  { label: "Direct email", sub: "Tell us what's slowing follow-up.", value: "hello@relay60.com", href: "mailto:hello@relay60.com" },
-  { label: "US & UK delivery", sub: "Local sender numbers & timezone rules.", value: "Austin, TX · London, UK", href: null },
-  { label: "Architecture call", sub: "15 minutes. No pitch deck.", value: "Live within 7 business days", href: null },
+  { label: "Email us", sub: "Tell us which workflow is eating the week.", value: "hello@relayops.io", href: "mailto:hello@relayops.io" },
+  { label: "Where we work", sub: "Remote engineering, in your timezone.", value: "United States & United Kingdom", href: null },
+  { label: "Introductory call", sub: "A working session, not a pitch.", value: "15 minutes · Clear scope", href: null },
 ] as const;
 
 export const FORM_COPY = {
-  eyebrow: "Live pipeline test",
-  line1: "Got slow follow-up?",
-  line2: "We engineer the loop.",
-  subtitle:
-    "Submit your details below. Our own Relay60 FastAPI backend will log your enquiry, run our SMS compliance gate, and queue your instant confirmation in real time.",
-  fullNameLabel: "Your Full Name *",
+  eyebrow: "Start a conversation",
+  line1: "Tell us which workflow",
+  line2: "should run itself.",
+  subtitle: "A few details are enough. We follow up to book a short technical walkthrough.",
+  fullNameLabel: "Full name *",
   fullNamePlaceholder: "Alex Morgan",
-  emailLabel: "Work Email Address *",
-  emailPlaceholder: "alex@yourbusiness.com",
-  phoneLabel: "Mobile or Direct Phone *",
-  phoneHelper: "Used for discovery call coordination—SMS only sent if you check the optional box below.",
-  businessLabel: "Business or Clinic Name *",
-  businessPlaceholder: "Oakridge Dental Studio",
-  websiteLabel: "Business Website (Optional)",
-  websitePlaceholder: "yourbusiness.com",
-  verticalLabel: "Industry Vertical *",
-  volumeLabel: "Approximate Monthly Enquiries *",
-  toolsLabel: "Current CRM / Calendar (Optional)",
-  toolsPlaceholder: "e.g., HubSpot + Google Calendar, Jobber, Cliniko",
-  windowLabel: "Preferred 15-Min Call Window *",
-  notesLabel: "Anything Specific You Want Automated? (Optional)",
-  notesPlaceholder: "e.g., After-hours web enquiries and missed weekend texts",
-  smsConsent:
-    "Optional SMS Demo & Call Reminders: By checking this box, I consent to receive automated transactional and demo text messages from Relay60 at the phone number provided above regarding my enquiry and scheduled setup call. Message frequency varies (typically 1–4 messages per enquiry). Message and data rates may apply. Reply STOP to opt out at any time or HELP for help. Consent is not a condition of purchase.",
-  privacyLead: "I agree to the Relay60 ",
+  emailLabel: "Work email *",
+  emailPlaceholder: "alex@company.com",
+  businessLabel: "Company name *",
+  businessPlaceholder: "Northline Ops",
+  phoneLabel: "Phone (optional)",
+  phoneHelper: "Used only to coordinate the call. Text updates are sent only if you opt in.",
+  teamLabel: "Team size *",
+  focusLabel: "What do you want to automate first? *",
+  toolsLabel: "Current tools (optional)",
+  toolsPlaceholder: "e.g., HubSpot, ServiceTitan, Google Calendar",
+  windowLabel: "Preferred call window *",
+  notesLabel: "Briefly describe the workflow eating your team's time (optional)",
+  notesPlaceholder: "e.g., New demo requests sit overnight and nobody updates the CRM.",
+  smsConsent: "Optional text updates: I agree to receive SMS confirmations and call reminders from Relay Systems at the number above. Message frequency varies; message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is optional.",
+  privacyLead: "I agree to the ",
   privacyMid: " and ",
-  privacyTail: ", and consent to Relay60 processing my submitted business details to respond to my enquiry.",
-  submitIdle: "Test Our 60s Pipeline & Book 15-Min Call",
-  submitBusy: "Dispatching Instant Pipeline...",
-  proofEmail: "Instant Email Confirmation Queued",
-  proofEmailStatus: "Status: Dispatched (< 60s SLA)",
-  proofSms: "SMS Demo Acknowledgement",
-  proofSmsQueued: "Queued to your mobile (opt-in verified)",
-  proofSmsSkipped: "Skipped cleanly (SMS opt-in checkbox left unchecked — compliance gate active)",
-  proofLead: "Lead ID Logged & Encrypted",
-  proofWindow: "Discovery Call Slot Preference",
-  embedPrompt: "Want to pick an exact 15-minute calendar time right now? Select a slot below:",
+  privacyTail: ".",
+  submitIdle: "Request a call",
+  submitBusy: "Sending...",
+  confirmBadge: "Enquiry received",
+  confirmTitle: "Thanks—we've received your details.",
+  confirmBody: "Your request is logged and a confirmation email is on its way. We will follow up shortly to confirm a time.",
+  confirmRefLabel: "Reference",
+  confirmWindowLabel: "Preferred window",
+  confirmStatusLabel: "Status",
+  confirmStatus: "Confirmation queued",
+  embedPrompt: "Or choose a 15-minute slot directly below:",
   errors: {
     full_name: "Please enter your full name (2–120 characters).",
     work_email: "Please enter a valid work email address.",
     phone: "Please enter a valid US or UK phone number (10–15 digits).",
-    business_name: "Please enter your business or clinic name (2–160 characters).",
+    business_name: "Please enter your company name (2–160 characters).",
     privacy_consent: "You must agree to the Privacy Policy and Terms of Service to continue.",
+    sms_phone: "Please provide a phone number to enable optional text updates.",
   },
 };
 
-export const VERTICAL_OPTIONS: Array<{ value: IndustryVertical; label: string }> = [
-  { value: "dental", label: "Dental & Orthodontics" },
-  { value: "medspa", label: "Med Spa & Aesthetics" },
-  { value: "trades", label: "HVAC, Plumbing & Home Services" },
-  { value: "clinics_legal", label: "Physio, Chiro & Local Legal" },
+export const TEAM_OPTIONS: Array<{ value: TeamSize; label: string }> = [
+  { value: "1_to_10", label: "1–10" },
+  { value: "11_to_50", label: "11–50" },
+  { value: "51_to_200", label: "51–200" },
+  { value: "200_plus", label: "200+" },
 ];
 
-export const VOLUME_OPTIONS: Array<{ value: MonthlyLeadVolume; label: string }> = [
-  { value: "under_30", label: "Under 30 enquiries/month" },
-  { value: "30_to_75", label: "30–75 enquiries/month" },
-  { value: "76_to_200", label: "76–200 enquiries/month" },
-  { value: "200_plus", label: "200+ enquiries/month" },
+export const FOCUS_OPTIONS: Array<{ value: AutomationFocus; label: string }> = [
+  { value: "inbound_leads", label: "Inbound leads & sales" },
+  { value: "client_onboarding", label: "Client onboarding & admin" },
+  { value: "crm_data_sync", label: "CRM & data sync" },
+  { value: "internal_assistant", label: "Internal AI assistant" },
+  { value: "custom_workflow", label: "Custom multi-step workflow" },
 ];
 
 export const WINDOW_OPTIONS: Array<{ value: PreferredTimeWindow; label: string }> = [
-  { value: "first_available", label: "First Available Slot (Next 24–48 Hours)" },
-  { value: "morning", label: "Morning (9:00 AM – 12:00 PM Local Time)" },
-  { value: "afternoon", label: "Afternoon (12:00 PM – 4:00 PM Local Time)" },
-  { value: "evening", label: "Late Afternoon (4:00 PM – 6:30 PM Local Time)" },
+  { value: "first_available", label: "First available" },
+  { value: "morning", label: "Morning" },
+  { value: "afternoon", label: "Afternoon" },
+  { value: "evening", label: "Late afternoon" },
 ];
 
 export const FOOTER_LINKS = [
-  { label: "Systems", href: "/#systems" },
+  { label: "Services", href: "/#capabilities" },
+  { label: "Work", href: "/#systems" },
   { label: "Workflow Studio", href: "/#simulator" },
-  { label: "ROI Calculator", href: "/#roi-calculator" },
+  { label: "Process", href: "/#process" },
   { label: "Pricing", href: "/#pricing" },
+  { label: "Admin Console", href: "/admin" },
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Terms of Service", href: "/terms" },
 ] as const;
 
 export const FOOTER_COPY = {
-  summary: "Relay60 engineers and operates autonomous 60-second lead response, CRM sync, and appointment booking systems for US & UK service teams.",
-  email: "hello@relay60.com",
-  copyright: "© 2026 Relay60 Systems Inc. / Relay60 Systems Ltd. All rights reserved. Mobile opt-in data and consent are never shared with third parties for marketing purposes.",
+  summary: "Custom AI automation and operational systems for US and UK businesses.",
+  email: "hello@relayops.io",
+  location: "United States & United Kingdom",
+  copyright: "© 2026 Relay Systems. All rights reserved.",
 };
 
 export const NOT_FOUND_COPY = {
-  badge: "404 — PAGE NOT FOUND",
-  heading: "This Page Missed Its Appointment.",
-  body: "Unlike our <60-second lead response engine, the URL you requested doesn't exist or has moved.",
-  cta: "Return to homepage",
+  badge: "404",
+  heading: "Page not found.",
+  body: "The page you are looking for does not exist or has moved.",
+  cta: "Back to homepage",
 };
 
 export interface LegalClause {
@@ -476,5 +359,4 @@ export interface LegalClause {
 }
 
 export const PRIVACY_CLAUSES: LegalClause[] = [];
-
 export const TERMS_CLAUSES: LegalClause[] = [];

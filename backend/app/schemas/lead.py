@@ -2,19 +2,29 @@ import re
 from datetime import datetime
 
 from email_validator import EmailNotValidError, validate_email
-from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, field_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, field_validator, model_validator
 
 from app.models.enums import (
+    AutomationFocus,
     IndustryVertical,
     LeadResponseStatus,
     MonthlyLeadVolume,
     PreferredTimeWindow,
     RegionCode,
+    TeamSize,
 )
 from app.schemas.common import DispatchLogItem
 
 _HTML_TAGS = re.compile(r"<[^>]*>")
 _WEBSITE = re.compile(r"^https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(/.*)?$")
+
+FOCUS_TO_VERTICAL: dict[AutomationFocus, IndustryVertical] = {
+    AutomationFocus.INBOUND_LEADS: IndustryVertical.LEAD_OPS,
+    AutomationFocus.CLIENT_ONBOARDING: IndustryVertical.CLIENT_ADMIN,
+    AutomationFocus.CRM_DATA_SYNC: IndustryVertical.CLIENT_ADMIN,
+    AutomationFocus.INTERNAL_ASSISTANT: IndustryVertical.INTERNAL_OPS,
+    AutomationFocus.CUSTOM_WORKFLOW: IndustryVertical.LEAD_OPS,
+}
 
 
 def _optional_text(value: object, max_length: int) -> str | None:
@@ -31,12 +41,14 @@ def _optional_text(value: object, max_length: int) -> str | None:
 class LeadCreateRequest(BaseModel):
     full_name: str
     work_email: str
-    region: RegionCode
-    phone: str
     business_name: str
+    region: RegionCode = RegionCode.US
+    phone: str | None = None
     website_url: str | None = None
-    vertical: IndustryVertical
-    monthly_lead_volume: MonthlyLeadVolume
+    vertical: IndustryVertical | None = None
+    team_size: TeamSize
+    automation_focus: AutomationFocus
+    monthly_lead_volume: MonthlyLeadVolume | None = None
     current_tools: str | None = None
     preferred_time_window: PreferredTimeWindow = PreferredTimeWindow.FIRST_AVAILABLE
     notes: str | None = None
@@ -66,10 +78,18 @@ class LeadCreateRequest(BaseModel):
             raise ValueError("Please enter a valid work email address.") from exc
         return text
 
-    @field_validator("phone")
+    @field_validator("phone", mode="before")
     @classmethod
-    def validate_phone(cls, value: str, info: ValidationInfo) -> str:
-        cleaned = re.sub(r"[\s\-\(\)\.]", "", value.strip())
+    def validate_phone(cls, value: object, info: ValidationInfo) -> str | None:
+        if value is None:
+            return None
+        text = str(value).strip()
+        if text == "":
+            return None
+        cleaned = re.sub(r"[\s\-\(\)\.]", "", text)
+        digits = re.sub(r"\D", "", cleaned)
+        if not 10 <= len(digits) <= 15:
+            raise ValueError("Please enter a valid US or UK phone number (10–15 digits).")
         region = info.data.get("region")
         if region == RegionCode.UK and re.fullmatch(r"0[1-9]\d{8,9}", cleaned):
             return "+44" + cleaned[1:]
@@ -78,6 +98,14 @@ class LeadCreateRequest(BaseModel):
         if re.fullmatch(r"\+?[1-9]\d{9,14}", cleaned):
             return cleaned if cleaned.startswith("+") else "+" + cleaned
         raise ValueError("Please enter a valid US or UK phone number (10–15 digits).")
+
+    @model_validator(mode="after")
+    def bind_workflow_and_sms(self) -> "LeadCreateRequest":
+        if self.vertical is None:
+            self.vertical = FOCUS_TO_VERTICAL[self.automation_focus]
+        if self.sms_consent and not self.phone:
+            raise ValueError("Please provide a phone number to enable optional text updates.")
+        return self
 
     @field_validator("business_name")
     @classmethod
@@ -109,7 +137,7 @@ class LeadCreateRequest(BaseModel):
     @field_validator("notes", mode="before")
     @classmethod
     def validate_notes(cls, value: object) -> str | None:
-        return _optional_text(value, 1000)
+        return _optional_text(value, 1200)
 
     @field_validator("privacy_consent")
     @classmethod
@@ -149,11 +177,13 @@ class LeadSummaryItem(BaseModel):
     id: str
     full_name: str
     work_email: str
-    phone: str
+    phone: str | None
     business_name: str
     vertical: IndustryVertical
+    team_size: TeamSize
+    automation_focus: AutomationFocus
     region: RegionCode
-    monthly_lead_volume: MonthlyLeadVolume
+    monthly_lead_volume: MonthlyLeadVolume | None = None
     sms_consent: bool
     response_status: LeadResponseStatus
     created_at: datetime
