@@ -62,7 +62,7 @@ export function Navbar() {
     setOpenMenu(null);
     setMobileOpen(false);
     window.dispatchEvent(new CustomEvent("relay:select-vertical", { detail: id }));
-    document.getElementById("simulator")?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById("systems")?.scrollIntoView({ behavior: "smooth" });
   }
 
   return (
@@ -148,7 +148,7 @@ export function Navbar() {
                     );
                   })}
             </div>
-            <Link href="/#simulator" onClick={() => setOpenMenu(null)} className="mt-4 flex items-center justify-between border-t border-white/[0.07] pt-3.5 text-xs text-slate-400 hover:text-white">
+            <Link href="/#systems" onClick={() => setOpenMenu(null)} className="mt-4 flex items-center justify-between border-t border-white/[0.07] pt-3.5 text-xs text-slate-400 hover:text-white">
               See a workflow in action
               <ArrowUpRight className="h-3.5 w-3.5 text-sky-400" />
             </Link>

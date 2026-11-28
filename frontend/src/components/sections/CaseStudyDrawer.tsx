@@ -5,16 +5,13 @@ import { useEffect } from "react";
 
 import { CASE_STUDIES } from "@/lib/copy";
 import { TOKEN } from "@/lib/tokens";
-import type { IndustryVertical } from "@/lib/types";
 
 export function CaseStudyDrawer({
   study,
   onClose,
-  onLaunch,
 }: {
   study: keyof typeof CASE_STUDIES | null;
   onClose: () => void;
-  onLaunch: (id: IndustryVertical) => void;
 }) {
   useEffect(() => {
     if (!study) return;
@@ -50,9 +47,6 @@ export function CaseStudyDrawer({
             </div>
           ))}
         </dl>
-        <button type="button" className={`${TOKEN.BTN_PRIMARY} mt-8 w-full`} onClick={() => onLaunch(study)}>
-          Try this workflow
-        </button>
       </aside>
     </div>
   );

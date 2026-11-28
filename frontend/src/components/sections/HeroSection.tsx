@@ -27,7 +27,7 @@ export function HeroSection() {
             <span className="block font-semibold text-white lg:whitespace-nowrap">{HERO_COPY.line2}</span>
             <span className="block font-light text-slate-400 lg:whitespace-nowrap">{HERO_COPY.line3}</span>
           </h1>
-          <Link href="/#simulator" className="group mt-8 inline-flex items-center gap-3 text-sm font-medium text-slate-300 transition-colors hover:text-white">
+          <Link href="/#systems" className="group mt-8 inline-flex items-center gap-3 text-sm font-medium text-slate-300 transition-colors hover:text-white">
             <span>{HERO_COPY.cta}</span>
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/15 transition-all group-hover:border-white/40 group-hover:bg-white/[0.06]">
               <ArrowRight className="h-3.5 w-3.5" />

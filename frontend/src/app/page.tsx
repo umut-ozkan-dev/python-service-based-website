@@ -6,7 +6,6 @@ import { HeroSection } from "@/components/sections/HeroSection";
 import { LeadBookingSection } from "@/components/sections/LeadBookingSection";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { ProcessSection } from "@/components/sections/ProcessSection";
-import { SimulatorSection } from "@/components/sections/SimulatorSection";
 import { SystemsShowcaseSection } from "@/components/sections/SystemsShowcaseSection";
 import { FAQ_ITEMS } from "@/lib/copy";
 
@@ -46,7 +45,6 @@ export default function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <HeroSection />
       <SystemsShowcaseSection />
-      <SimulatorSection />
       <CapabilitiesSection />
       <ConnectedStackSection />
       <ProcessSection />

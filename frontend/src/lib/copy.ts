@@ -1,7 +1,7 @@
 import type { AutomationFocus, IndustryVertical, PreferredTimeWindow, RegionCode, TeamSize } from "@/lib/types";
 
 export const CAPABILITIES_MENU = [
-  { id: "lead-response", title: "Inbound Lead & Sales Ops", desc: "Reply, qualify, update the CRM, and book the call.", href: "/#simulator" },
+  { id: "lead-response", title: "Inbound Lead & Sales Ops", desc: "Reply, qualify, update the CRM, and book the call.", href: "/#systems" },
   { id: "booking", title: "Client Onboarding & Admin", desc: "Collect documents and provision the workspace.", href: "/#systems" },
   { id: "crm-sync", title: "CRM & Systems Integration", desc: "Two-way sync across the tools you already run.", href: "/#stack" },
   { id: "follow-up", title: "Quote & Pipeline Follow-Up", desc: "Check-ins that stop the moment someone replies.", href: "/#capabilities" },
@@ -330,7 +330,6 @@ export const WINDOW_OPTIONS: Array<{ value: PreferredTimeWindow; label: string }
 export const FOOTER_LINKS = [
   { label: "Services", href: "/#capabilities" },
   { label: "Work", href: "/#systems" },
-  { label: "Workflow Studio", href: "/#simulator" },
   { label: "Process", href: "/#process" },
   { label: "Pricing", href: "/#pricing" },
   { label: "Admin Console", href: "/admin" },

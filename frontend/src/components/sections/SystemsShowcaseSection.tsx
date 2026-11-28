@@ -1,13 +1,11 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 
 import { CaseStudyDrawer } from "@/components/sections/CaseStudyDrawer";
 import { useRegion } from "@/context/RegionContext";
 import { CASE_STUDIES, SYSTEMS_COPY } from "@/lib/copy";
 import { TOKEN } from "@/lib/tokens";
-import type { IndustryVertical } from "@/lib/types";
 
 const SPARK_COLORS = ["#38BDF8", "#34D399", "#A78BFA", "#F59E0B"];
 
@@ -34,10 +32,6 @@ function Chrome({ title, status, showSearch = false }: { title: string; status: 
       </div>
     </div>
   );
-}
-
-function openStudio(id: IndustryVertical) {
-  window.dispatchEvent(new CustomEvent("relay:select-vertical", { detail: id }));
 }
 
 export function SystemsShowcaseSection() {
@@ -84,9 +78,8 @@ export function SystemsShowcaseSection() {
             <p className={`${TOKEN.EYEBROW_WRAP} mt-6`}><span className={TOKEN.EYEBROW_DASH} />{SYSTEMS_COPY.one.tag}</p>
             <h3 className={`${TOKEN.H3} mt-3`}>{SYSTEMS_COPY.one.title}</h3>
             <p className={`${TOKEN.BODY_SM} mt-2 max-w-xl`}>{SYSTEMS_COPY.one.summary}</p>
-            <div className="mt-5 flex flex-wrap gap-3">
+            <div className="mt-5">
               <button type="button" className={TOKEN.BTN_SECONDARY} onClick={() => setStudy("lead_ops")}>{SYSTEMS_COPY.one.inspect}</button>
-              <a href="#simulator" onClick={() => openStudio("lead_ops")} className={TOKEN.BTN_PRIMARY}>{SYSTEMS_COPY.one.link}<ArrowRight className="h-4 w-4" /></a>
             </div>
           </article>
           <article className="lg:col-span-5 lg:mt-20">
@@ -116,22 +109,13 @@ export function SystemsShowcaseSection() {
             <p className={`${TOKEN.EYEBROW_WRAP} mt-6`}><span className={TOKEN.EYEBROW_DASH} />{SYSTEMS_COPY.two.tag}</p>
             <h3 className={`${TOKEN.H3} mt-3`}>{SYSTEMS_COPY.two.title}</h3>
             <p className={`${TOKEN.BODY_SM} mt-2`}>{SYSTEMS_COPY.two.summary}</p>
-            <div className="mt-5 flex flex-wrap gap-3">
+            <div className="mt-5">
               <button type="button" className={TOKEN.BTN_SECONDARY} onClick={() => setStudy("dispatch_quotes")}>{SYSTEMS_COPY.two.inspect}</button>
-              <a href="#simulator" onClick={() => openStudio("dispatch_quotes")} className={TOKEN.BTN_PRIMARY}>{SYSTEMS_COPY.two.link}<ArrowRight className="h-4 w-4" /></a>
             </div>
           </article>
         </div>
       </div>
-      <CaseStudyDrawer
-        study={study}
-        onClose={() => setStudy(null)}
-        onLaunch={(id) => {
-          setStudy(null);
-          openStudio(id);
-          document.getElementById("simulator")?.scrollIntoView({ behavior: "smooth" });
-        }}
-      />
+      <CaseStudyDrawer study={study} onClose={() => setStudy(null)} />
     </section>
   );
 }
